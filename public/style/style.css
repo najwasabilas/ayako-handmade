@@ -1,3 +1,6 @@
+/* ============================= */
+/* 🔹 1. GLOBAL RESET & BASE */
+/* ============================= */
 * {
   margin: 0;
   padding: 0;
@@ -8,10 +11,17 @@
 body, html {
   height: 100%;
   width: 100%;
+}
+
+/* ============================= */
+/* 🔹 2. HALAMAN AUTH (REGISTER & LOGIN) */
+/* ============================= */
+body.auth {
   background: url("../assets/bg.jpg") no-repeat center center/cover;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 /* Container utama */
@@ -20,10 +30,9 @@ body, html {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 20px;
 }
 
-/* Card registrasi */
+/* Card */
 .register-card {
   display: flex;
   width: 800px;
@@ -34,11 +43,11 @@ body, html {
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Bagian kiri → jadi background logo */
+/* Bagian kiri → logo full */
 .left-side {
   flex: 1;
   background: url("../assets/logo.png") no-repeat center center;
-  background-size: cover;   /* logo memenuhi area */
+  background-size: cover;
   min-height: 400px;
 }
 
@@ -59,80 +68,328 @@ body, html {
   color: #7b4a20;
 }
 
+/* Input */
 .register-form input {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
-  border: 1px solid #a86127;
+  border: 1px solid #ad6823;
   border-radius: 8px;
   font-size: 14px;
 }
 
+/* Lupa password */
+.forgot-password {
+  text-align: right;
+  margin: -5px 0 15px 0;
+  font-size: 14px;
+}
+.forgot-password a {
+  color: #7b4a20;
+  text-decoration: none;
+  font-weight: 500;
+}
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Tombol */
 .btn-daftar {
   width: 100%;
   padding: 12px;
-  background-color: #a86127;
-  color: white;
+  background-color: #ad6823;
+  color: #fff;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
 }
-
 .btn-daftar:hover {
   background-color: #8a4f1c;
 }
 
+/* Link login/register */
 .login-text {
   margin-top: 20px;
   font-size: 14px;
   color: #444;
   text-align: center;
 }
-
 .login-text .login-link {
-  color: #a86127;
+  color: #ad6823;
   font-weight: 600;
   text-decoration: none;
 }
-
 .login-text .login-link:hover {
   text-decoration: underline;
 }
 
-/* 🔹 Responsive untuk Mobile */
+/* Responsive */
 @media (max-width: 768px) {
   .register-card {
-    flex-direction: column;     /* ubah jadi vertikal */
+    flex-direction: column;
     width: 100%;
     border-radius: 12px;
   }
-
   .left-side {
     width: 100%;
-    height: 200px;             /* tinggi logo lebih kecil */
+    height: 200px;
     min-height: unset;
   }
-
   .right-side {
     padding: 30px 20px;
   }
 }
 
-/* Styling untuk link Lupa Password */
-.forgot-password {
-  text-align: right;        /* rata kanan */
-  margin: 5px 0 91px 0;    /* kasih jarak rapat ke input, bawah agak lega */
-  font-size: 14px;
+/* ============================= */
+/* 🔹 3. HALAMAN PROFIL (EDIT PROFIL) */
+/* ============================= */
+body.profile-page {
+  background: #faf6ed;      /* background halaman */
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
-.forgot-password a {
-  color: #7b4a20;           /* coklat sesuai tema */
-  text-decoration: none;
+.profile-container {
+  max-width: 1100px;
+  width: 100%;
+  background: #faf6ed;      /* sama dengan body */
+  border-radius: 16px;
+  padding-left: 31px;
+  padding-right: 31px;
+  box-shadow: none;         /* hapus shadow */
+  margin: 0 auto;        /* biar center & ada jarak dari nav */
+}
+
+/* Tombol back */
+.back {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
   font-weight: 500;
+  cursor: pointer;
+  margin: 20px 30px;   /* jarak dari kiri */
 }
 
-.forgot-password a:hover {
-  text-decoration: underline;
+.back img {
+  width: 22px;
 }
+
+
+/* Konten */
+.profile-content {
+  display: flex;
+  gap: 60px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Form */
+.profile-form {
+  flex: 1;
+}
+.profile-form h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.profile-form hr {
+  margin: 10px 0 20px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+.profile-form label {
+  display: block;
+  font-weight: 600;
+  margin: 15px 0 5px;
+}
+.profile-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font-size: 16px;
+}
+.btn-save {
+  margin: 25px auto 0 auto;    /* auto kiri kanan → center */
+  padding: 12px 30px;
+  background: #a96327;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;              /* block biar margin auto bisa jalan */
+  width: fit-content;          /* ukurannya mengikuti isi */
+  text-align: center;
+}
+
+
+.btn-save:hover {
+  background: #8a4f1c;
+}
+
+/* Foto profil */
+.profile-photo {
+  text-align: center;       /* semua konten center */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;                /* jarak antar elemen */
+}
+
+.profile-photo h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.profile-photo .avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;       /* lingkaran */
+  object-fit: cover;        /* biar gak gepeng */
+  border: 3px solid #a86127; 
+}
+
+.btn-upload {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid #7b4a20;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.btn-upload:hover {
+  background-color: #7b4a20;
+  color: #fff;
+}
+
+
+
+/* Responsive profil */
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+  }
+  .profile-form {
+    width: 100%;
+  }
+}
+
+
+/* ============================= */
+/* 🔹 NAVBAR */
+/* ============================= */
+.navbar {
+  width: 100%;
+  background: #ad6823;
+  padding: 15px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left .logo {
+  width: 140px;
+  height: auto;
+}
+
+.nav-center {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-center a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.nav-center a:hover {
+  color: #ffe1c2;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-icons img {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  filter: brightness(0) invert(1); /* jadi putih */
+  transition: 0.3s;
+}
+.nav-icons img:hover {
+  filter: brightness(0.8) invert(1);
+}
+
+
+/* Desktop: hamburger disembunyikan */
+.hamburger {
+  display: none;
+}
+
+
+
+/* Default: PC tetap seperti semula */
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 15px 20px;
+  }
+
+  .nav-center {
+    display: none;                  /* default sembunyi */
+    flex-direction: column;
+    align-items: center;            /* biar ketengah */
+    width: 100%;
+    background: #ad6823;
+    padding: 15px 0;
+    gap: 15px;
+  }
+
+  .nav-center.show {
+    display: flex;                  /* muncul saat hamburger diklik */
+  }
+
+  .nav-icons {
+    display: none;                  /* default sembunyi */
+    justify-content: center;
+    width: 100%;
+    gap: 25px;
+    margin-top: 15px;
+  }
+
+  .nav-icons.show {
+    display: flex;                  /* muncul saat hamburger diklik */
+  }
+
+  .hamburger {
+    display: block;
+    cursor: pointer;
+    font-size: 26px;
+    color: #fff;
+    background: none;
+    border: none;
+  }
+}
+
+
