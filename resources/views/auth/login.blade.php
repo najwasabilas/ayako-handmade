@@ -6,7 +6,7 @@
   <title>Login Customer</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}" />
 </head>
-<body>
+<body class="auth">
   <div class="register-container">
     <div class="register-card">
       <div class="left-side"></div>

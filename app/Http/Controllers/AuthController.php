@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return view('welcome');
+        return redirect()->route('customer.profile');
     }
 
     public function showLogin() {
@@ -44,7 +44,7 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return view('welcome');
+            return redirect()->route('customer.profile');
         }
 
         return back()->withErrors([
