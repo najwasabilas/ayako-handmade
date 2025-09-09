@@ -1,0 +1,138 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  background: url("../assets/bg.jpg") no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container utama */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Card registrasi */
+.register-card {
+  display: flex;
+  width: 800px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Bagian kiri → jadi background logo */
+.left-side {
+  flex: 1;
+  background: url("../assets/logo.png") no-repeat center center;
+  background-size: cover;   /* logo memenuhi area */
+  min-height: 400px;
+}
+
+/* Bagian kanan */
+.right-side {
+  flex: 1;
+  padding: 50px 40px;
+  background: #fdf9f3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.right-side h2 {
+  font-size: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+  color: #7b4a20;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #a86127;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-daftar {
+  width: 100%;
+  padding: 12px;
+  background-color: #a86127;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-daftar:hover {
+  background-color: #8a4f1c;
+}
+
+.login-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #444;
+  text-align: center;
+}
+
+.login-text .login-link {
+  color: #a86127;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-text .login-link:hover {
+  text-decoration: underline;
+}
+
+/* 🔹 Responsive untuk Mobile */
+@media (max-width: 768px) {
+  .register-card {
+    flex-direction: column;     /* ubah jadi vertikal */
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  .left-side {
+    width: 100%;
+    height: 200px;             /* tinggi logo lebih kecil */
+    min-height: unset;
+  }
+
+  .right-side {
+    padding: 30px 20px;
+  }
+}
+
+/* Styling untuk link Lupa Password */
+.forgot-password {
+  text-align: right;        /* rata kanan */
+  margin: 5px 0 91px 0;    /* kasih jarak rapat ke input, bawah agak lega */
+  font-size: 14px;
+}
+
+.forgot-password a {
+  color: #7b4a20;           /* coklat sesuai tema */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
