@@ -13,7 +13,17 @@
 
       <div class="right-side">
         <h2>Form Login</h2>
-        <form action="#" method="POST" class="register-form" action="{{ url('/login') }}">
+        @if ($errors->any())
+          <div class="alert-error">
+            <ul>
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <form method="POST" class="register-form" action="{{ url('/login') }}">
             @csrf
           <input type="email" name="email" placeholder="Masukkan Email" required />
           <input type="password" name="password" placeholder="Masukkan Password" required />

@@ -4,9 +4,6 @@
 @section('body-class', 'profile-page')
 
 @section('content')
-@if(session('success'))
-        <p style="color:green">{{ session('success') }}</p>
-    @endif
   <!-- Kembali -->
   <div class="back">
     <img src="{{ asset('assets/back.svg') }}" alt="Kembali" />
