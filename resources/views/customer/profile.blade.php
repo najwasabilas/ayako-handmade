@@ -7,7 +7,7 @@
   <!-- Kembali -->
   <div class="back">
     <img src="{{ asset('assets/back.svg') }}" alt="Kembali" />
-    <span>Kembali</span>
+    <a href="{{ url('/') }}" style="text-decoration: none;color:black">Kembali</a>
   </div>
 
   <div class="profile-container">

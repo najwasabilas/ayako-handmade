@@ -17,19 +17,37 @@
     <!-- Tombol hamburger (muncul di mobile) -->
     <button class="hamburger" id="hamburger">&#9776;</button>
 
+    @php
+      $current = request()->path(); // Ambil path URL sekarang
+    @endphp
+
     <div class="nav-center" id="nav-menu">
-      <a href="{{ url('/') }}">HOME</a>
-      <a href="#">KATALOG</a>
-      <a href="#">FABRIC</a>
-      <a href="#">PROFIL</a>
-      <a href="#">GALERI</a>
+      <a href="{{ url('/') }}" class="{{ $current === '/' ? 'active' : '' }}">HOME</a>
+      <a href="{{ url('/katalog') }}" class="{{ $current === 'katalog' ? 'active' : '' }}">KATALOG</a>
+      <a href="{{ url('/fabric') }}" class="{{ $current === 'fabric' ? 'active' : '' }}">FABRIC</a>
+      <a href="{{ url('/profil') }}" class="{{ $current === 'profil' ? 'active' : '' }}">PROFIL</a>
+      <a href="{{ url('/galeri') }}" class="{{ $current === 'galeri' ? 'active' : '' }}">GALERI</a>
     </div>
 
     <div class="nav-icons" id="nav-icons">
-      <a href=""><img src="{{ asset('assets/search.svg') }}" alt="Search"></a>
-      <a href=""><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
-      <a href=""><img src="{{ asset('assets/user.svg') }}" alt="User"></a>
+      <a href="#"><img src="{{ asset('assets/search.svg') }}" alt="Search"></a>
+      <a href="#"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
+      <div class="dropdown">
+        <img src="{{ asset('assets/user.svg') }}" alt="User" class="user-icon" id="userDropdownToggle">
+        <div class="dropdown-menu" id="userDropdownMenu">
+          @auth
+            <a href="{{ route('customer.profile') }}">Profile</a>
+            <form action="{{ route('logout') }}" method="POST">
+              @csrf
+              <button type="submit">Logout</button>
+            </form>
+          @else
+            <a href="{{ route('login') }}">Login</a>
+          @endauth
+        </div>
+      </div>
     </div>
+
   </nav>
 
   <!-- Main Content -->
@@ -69,6 +87,22 @@
       navMenu.classList.toggle('show');
       navIcons.classList.toggle('show');
     });
+
+    // Dropdown user
+    const userToggle = document.getElementById('userDropdownToggle');
+    const dropdownMenu = document.getElementById('userDropdownMenu');
+
+    userToggle.addEventListener('click', () => {
+      dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!userToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.style.display = 'none';
+      }
+    });
   </script>
+
 </body>
 </html>
