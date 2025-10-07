@@ -104,5 +104,38 @@
     });
   </script>
 
+    <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Kolom 1: Logo -->
+      <div class="footer-column footer-logo">
+        <img src="{{ asset('assets/logo_footer.jpg') }}" alt="Ayako Logo" class="footer-logo-img">
+        <p class="footer-brand">Handmade Bag Riau</p>
+      </div>
+
+      <!-- Kolom 2: Alamat dan Kontak -->
+      <div class="footer-column footer-info">
+        <h4>Alamat</h4>
+        <p>Jl. Bandara SU, Sidomulyo Tim,<br>
+        Kec. Marpoyan Damai, Kota Pekanbaru, Riau 28288</p>
+
+        <h4>Kontak</h4>
+        <p>0811-7680-059</p>
+
+        <h4>Email</h4>
+        <p>contohayako@gmail.com</p>
+      </div>
+
+      <!-- Kolom 3: Tentang Kami -->
+      <div class="footer-column footer-links">
+        <h4>Tentang Kami</h4>
+        <a href="{{ url('/') }}">Home</a>
+        <a href="{{ url('/katalog') }}">Katalog</a>
+        <a href="{{ url('/profil') }}">Profil</a>
+        <a href="{{ url('/galeri') }}">Galeri</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

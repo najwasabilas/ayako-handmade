@@ -398,6 +398,78 @@ body.profile-page {
   }
 }
 
+/* ========================= */
+/* 🔶 Footer Ayako           */
+/* ========================= */
+.footer {
+  background-color: #A5632E; /* coklat seperti di gambar */
+  color: #fff;
+  padding: 40px 80px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-logo-img {
+  width: 160px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.footer-brand {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.footer-column p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-links a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 5px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #f9e4cc; /* efek hover lembut */
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 40px;
+  }
+  .footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
 .error-alert {
       background-color: #f8d7da;
       color: #842029;
