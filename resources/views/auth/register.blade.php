@@ -13,10 +13,22 @@
 
       <div class="right-side">
         <h2>Form Registrasi</h2>
-        <form action="#" method="POST" class="register-form" action="{{ url('/register') }}">
+
+        {{-- Tampilkan semua error jika ada --}}
+        @if ($errors->any())
+          <div class="error-alert">
+            <ul style="margin: 0; padding-left: 20px;">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <form method="POST" class="register-form" action="{{ url('/register') }}">
             @csrf
-          <input type="text" name="name" placeholder="Nama Lengkap" required />
-          <input type="email" name="email" placeholder="Masukkan Email" required />
+          <input type="text" name="name" placeholder="Nama Lengkap" value="{{ old('name') }}" required />
+          <input type="email" name="email" placeholder="Masukkan Email" value="{{ old('email') }}" required />
           <input type="password" name="password" placeholder="Masukkan Password" required />
           <input type="password" name="password_confirmation" placeholder="Ulangi Password" required />
 
