@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GalleryController;
 
 Route::get('/', function () {
     return view('home');
@@ -25,3 +26,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Profil UMKM
 Route::get('/profile-umkm', [ProfileController::class, 'index'])->name('profile-umkm');
+
+// Gallery
+Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');

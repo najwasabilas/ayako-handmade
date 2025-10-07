@@ -833,3 +833,147 @@ body.profile-page {
     padding: 40px 20px;
   }
 }
+
+/* ===== Hero Section: Ayako Logo Fullscreen ===== */
+.gallery-hero {
+  width: 100%;
+  max-width: 1440px;      /* batasi maksimal selebar gambar asli */
+  aspect-ratio: 1440 / 390; /* jaga rasio tinggi terhadap lebar */
+  margin: 0 auto;
+  background-color: #faf5ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.gallery-hero .hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* ====== Galeri Kegiatan ====== */
+.gallery-section {
+  padding: 60px 8%;
+  background-color: #faf5ef;
+  font-family: 'Poppins', sans-serif;
+}
+
+.gallery-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c2c2c;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.gallery-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.gallery-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.gallery-info h3 {
+  font-size: 18px;
+  color: #a5632e;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.gallery-info p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ====== Testimonial ====== */
+.testimonial-section {
+  background-color: #faf5ef;
+  padding: 60px 8%;
+}
+
+.testimonial-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  align-items: center;
+  gap: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.testimonial-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial-text {
+  padding: 40px;
+  position: relative;
+  color: #5b3a1b;
+}
+
+.quote-icon {
+  font-size: 50px;
+  color: #c89a68;
+  line-height: 1;
+  margin: 0;
+}
+
+.quote-icon.right {
+  text-align: right;
+  margin-top: -10px;
+}
+
+.quote-text {
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .testimonial-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
