@@ -25,7 +25,7 @@
       <a href="{{ url('/') }}" class="{{ $current === '/' ? 'active' : '' }}">HOME</a>
       <a href="{{ url('/katalog') }}" class="{{ $current === 'katalog' ? 'active' : '' }}">KATALOG</a>
       <a href="{{ url('/fabric') }}" class="{{ $current === 'fabric' ? 'active' : '' }}">FABRIC</a>
-      <a href="{{ url('/profil') }}" class="{{ $current === 'profil' ? 'active' : '' }}">PROFIL</a>
+      <a href="{{ url('/profile-umkm') }}" class="{{ $current === 'profile-umkm' ? 'active' : '' }}">PROFIL</a>
       <a href="{{ url('/galeri') }}" class="{{ $current === 'galeri' ? 'active' : '' }}">GALERI</a>
     </div>
 
@@ -131,7 +131,7 @@
         <h4>Tentang Kami</h4>
         <a href="{{ url('/') }}">Home</a>
         <a href="{{ url('/katalog') }}">Katalog</a>
-        <a href="{{ url('/profil') }}">Profil</a>
+        <a href="{{ url('/profile-umkm') }}">Profil</a>
         <a href="{{ url('/galeri') }}">Galeri</a>
       </div>
     </div>
