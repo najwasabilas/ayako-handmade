@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'Ayako')</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}">
+  <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
 </head>
 <body class="@yield('body-class')">
 
@@ -104,16 +105,13 @@
     });
   </script>
 
-    <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <!-- Kolom 1: Logo -->
       <div class="footer-column footer-logo">
         <img src="{{ asset('assets/logo_footer.jpg') }}" alt="Ayako Logo" class="footer-logo-img">
         <p class="footer-brand">Handmade Bag Riau</p>
       </div>
 
-      <!-- Kolom 2: Alamat dan Kontak -->
       <div class="footer-column footer-info">
         <h4>Alamat</h4>
         <p>Jl. Bandara SU, Sidomulyo Tim,<br>
@@ -126,7 +124,6 @@
         <p>contohayako@gmail.com</p>
       </div>
 
-      <!-- Kolom 3: Tentang Kami -->
       <div class="footer-column footer-links">
         <h4>Tentang Kami</h4>
         <a href="{{ url('/') }}">Home</a>

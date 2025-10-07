@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registrasi Customer</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}" />
+  <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
 </head>
 <body class="auth">
   <div class="register-container">
