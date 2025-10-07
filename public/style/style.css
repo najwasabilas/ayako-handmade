@@ -161,6 +161,7 @@ body.profile-page {
   padding-right: 31px;
   box-shadow: none;         /* hapus shadow */
   margin: 0 auto;        /* biar center & ada jarak dari nav */
+  margin-bottom: 100px;
 }
 
 /* Tombol back */
@@ -762,4 +763,73 @@ body.profile-page {
 
 .dropdown-menu form {
   margin: 0;
+}
+
+.profile-section {
+  padding: 60px 8%;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+.profile-title {
+  font-size: 30px;
+  color: #a5632e;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.profile-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+  gap: 40px;
+}
+
+.profile-block.reverse {
+  flex-direction: row-reverse;
+}
+
+.profile-block img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.profile-text {
+  flex: 1 1 50%;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.profile-text h3 {
+  color: #a5632e;
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-image {
+  flex: 1 1 45%;
+}
+
+.profile-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-text ul li {
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .profile-block,
+  .profile-block.reverse {
+    flex-direction: column;
+  }
+  .profile-section {
+    padding: 40px 20px;
+  }
 }

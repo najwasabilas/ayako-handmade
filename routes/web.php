@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('home');
@@ -21,3 +22,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [CustomerController::class, 'profile'])->name('customer.profile');
     Route::post('/profile', [CustomerController::class, 'updateProfile']);
 });
+
+// Profil UMKM
+Route::get('/profile-umkm', [ProfileController::class, 'index'])->name('profile-umkm');
