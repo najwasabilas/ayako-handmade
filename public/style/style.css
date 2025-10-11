@@ -1073,12 +1073,18 @@ body.profile-page {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   padding: 16px;
   animation: fadeIn 0.8s ease;
   width:100%;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .product-card-catalog:hover {

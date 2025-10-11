@@ -27,12 +27,13 @@
   </div>
 
   <div class="products-grid-catalog">
-    @forelse($products as $product)
+  @forelse($products as $product)
+    <a href="{{ route('produk.show', $product->id) }}" class="product-link">
       <div class="product-card-catalog">
         @if($product->images->isNotEmpty())
           <img src="{{ asset('assets/catalog/images/' . $product->images->first()->gambar) }}" alt="{{ $product->nama }}">
         @else
-          <img src="{{ asset('assets/default-product.jpg') }}" alt="Default">
+          <img src="{{ asset('assets/catalog/no-image.jpg') }}" alt="Default">
         @endif
 
         <div class="product-info">
@@ -43,10 +44,12 @@
           </div>
         </div>
       </div>
-    @empty
-      <p class="no-product">Produk tidak ditemukan.</p>
-    @endforelse
-  </div>
+    </a>
+  @empty
+    <p class="no-product">Produk tidak ditemukan.</p>
+  @endforelse
+</div>
+
 
   <div class="pagination-wrapper">
     {{ $products->appends(request()->query())->links('vendor.pagination.ayako') }}

@@ -33,7 +33,6 @@
     </div>
 
     <div class="nav-icons" id="nav-icons">
-      <a href="#"><img src="{{ asset('assets/search.svg') }}" alt="Search"></a>
       <a href="#"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
       <div class="dropdown">
         <img src="{{ asset('assets/user.svg') }}" alt="User" class="user-icon" id="userDropdownToggle">
