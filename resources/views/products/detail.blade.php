@@ -43,6 +43,7 @@
       <div class="button-group">
         <button class="btn-cart"
         onclick="openPopup({
+            id: {{ $product->id }},
             nama: '{{ $product->nama }}',
             harga: {{ $product->harga }},
             stok: {{ $product->stok }},
@@ -53,6 +54,7 @@
 
         <button class="btn-buy"
         onclick="openPopup({
+            id: {{ $product->id }},
             nama: '{{ $product->nama }}',
             harga: {{ $product->harga }},
             stok: {{ $product->stok }},

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@include('components.product-popup')
 
 @section('title', 'Katalog Produk')
 
@@ -40,7 +41,15 @@
           <h3>{{ $product->nama }}</h3>
           <div class="product-footer">
             <span class="price">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
-            <i class="fas fa-shopping-cart cart-icon"></i>
+            <i class="fas fa-shopping-cart cart-icon"
+            onclick="event.preventDefault(); event.stopPropagation(); openPopup({
+                id: {{ $product->id }},
+                nama: '{{ $product->nama }}',
+                harga: {{ $product->harga }},
+                stok: {{ $product->stok }},
+                image: '{{ asset('assets/catalog/images/' . ($product->images->first()->gambar ?? 'no-image.jpg')) }}'
+            }, 'keranjang')">
+            </i>
           </div>
         </div>
       </div>

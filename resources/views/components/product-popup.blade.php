@@ -1,181 +1,208 @@
-<div id="productPopup" class="popup-overlay" style="display:none;">
-  <div class="popup-box">
-    <button type="button" class="popup-close">&times;</button>
+<!-- ===== Popup Tambah ke Keranjang / Beli Sekarang ===== -->
+<div id="productPopup" class="popup-overlay">
+  <div class="popup-content">
+    <button class="popup-close">&times;</button>
 
-    <div class="popup-content">
-      <!-- Baris 1: Gambar + Nama + Harga + Stok -->
-      <div class="popup-row popup-header">
-        <img id="popupImage" src="{{ asset('assets/catalog/no-image.jpg') }}" alt="Produk">
-        <div class="popup-text">
-          <p class="popup-name" id="popupName">Nama Produk</p>
-          <p class="popup-price" id="popupPrice">Rp 0</p>
-          <p class="popup-stock">Stok: <span id="popupStock">0</span></p>
-        </div>
+    <div class="popup-row image-row">
+      <img id="popupImage" src="" alt="Product Image">
+      <div class="popup-info">
+        <h3 id="popupName">Nama Produk</h3>
+        <p class="price" id="popupPrice">Rp 0</p>
+        <p class="stok">Stok: <span id="popupStock">0</span></p>
       </div>
+    </div>
 
-      <hr>
-
-      <!-- Baris 2: Input jumlah -->
-      <div class="popup-row popup-qty">
-        <label for="popupQty">Jumlah</label>
-        <div class="qty-control">
-          <button type="button" class="qty-btn" id="qtyMinus">−</button>
-          <input type="number" id="popupQty" value="1" min="1">
-          <button type="button" class="qty-btn" id="qtyPlus">+</button>
-        </div>
+    <div class="popup-row qty-row">
+      <label for="popupQty">Jumlah:</label>
+      <div class="qty-control">
+        <button id="qtyMinus">−</button>
+        <input type="number" id="popupQty" min="1" value="1">
+        <button id="qtyPlus">+</button>
       </div>
+    </div>
 
-      <hr>
-
-      <!-- Baris 3: Tombol aksi -->
-      <button type="button" id="popupActionBtn" class="popup-btn">Masukkan Keranjang</button>
+    <div class="popup-row button-row">
+      <button id="popupActionBtn">Masukkan Keranjang</button>
     </div>
   </div>
 </div>
 
+<!-- ===== Popup Notifikasi ===== -->
+<div id="notifPopup" class="notif-popup">
+  <i class="fas fa-check-circle"></i>
+  <span id="notifMessage">Produk berhasil ditambahkan ke keranjang!</span>
+</div>
+
 <style>
+/* ========== Popup Utama ========== */
 .popup-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.4);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 99999;
+  padding: 15px;
 }
 
-.popup-box {
+.popup-content {
   background: #fff;
   border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   position: relative;
-  animation: fadeIn 0.3s ease;
-  overflow: hidden;
 }
 
 .popup-close {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  background: none;
+  top: 10px;
+  right: 15px;
+  background: transparent;
   border: none;
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
   color: #555;
 }
 
-.popup-content {
-  padding: 20px;
+.image-row {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.popup-row {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 15px;
 }
 
-.popup-header img {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
+.image-row img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
   object-fit: cover;
 }
 
-.popup-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
-  margin-left: 15px;
-}
-
-.popup-name {
-  font-weight: 600;
+.popup-info h3 {
   font-size: 16px;
-  margin: 0 0 5px 0;
-  color: #333;
+  font-weight: 600;
+  margin: 0 0 5px;
 }
 
-.popup-price {
-  color: #7a4a15;
+.popup-info .price {
+  color: #a86b32;
   font-weight: 600;
-  font-size: 18px;
   margin: 0;
 }
 
-.popup-stock {
-  color: #666;
-  font-size: 14px;
-  margin: 2px 0 0 0;
+.popup-info .stok {
+  font-size: 13px;
+  color: #555;
 }
 
-hr {
-  border: none;
-  border-top: 1px solid #eee;
-  margin: 10px 0;
-}
-
-.popup-qty label {
-  font-size: 15px;
-  color: #333;
+.qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .qty-control {
   display: flex;
   align-items: center;
-  border: 1px solid #a86b32;
-  border-radius: 8px;
-  overflow: hidden;
+  gap: 8px;
 }
 
-.qty-btn {
-  background: none;
+.qty-control button {
+  width: 30px;
+  height: 30px;
+  background: #eee;
   border: none;
-  color: #a86b32;
+  border-radius: 5px;
   font-size: 18px;
-  padding: 6px 12px;
   cursor: pointer;
 }
 
-#popupQty {
-  width: 45px;
+.qty-control input {
+  width: 60px;
   text-align: center;
-  border: none;
-  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  height: 30px;
 }
 
-/* Tombol utama */
-.popup-btn {
-  width: 100%;
-  background: #d19a54;
-  color: white;
+.button-row {
+  display: flex;
+  justify-content: center;
+}
+
+#popupActionBtn {
+  background: #a86b32;
+  color: #fff;
   border: none;
-  border-radius: 10px;
-  padding: 12px 0;
-  font-weight: 600;
+  border-radius: 25px;
+  padding: 10px 30px;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: 0.3s;
 }
 
-.popup-btn:hover {
-  background: #b87e35;
+#popupActionBtn:hover {
+  background: #8b5a28;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+/* ========== Popup Notifikasi ========== */
+.notif-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #4CAF50;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 9999999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
 }
 
-@media (max-width: 480px) {
-  .popup-box { width: 95%; }
-  .popup-header img { width: 60px; height: 60px; }
-  .popup-name { font-size: 15px; }
-  .popup-price { font-size: 16px; }
+.notif-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.notif-popup i {
+  font-size: 20px;
+}
+
+/* ========== Responsif ========== */
+@media (max-width: 600px) {
+  .popup-content {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .image-row img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .popup-info h3 {
+    font-size: 14px;
+  }
+
+  #popupActionBtn {
+    width: 100%;
+  }
 }
 </style>
 
@@ -187,17 +214,19 @@ document.addEventListener("DOMContentLoaded", function() {
   const minusBtn = document.getElementById("qtyMinus");
   const plusBtn = document.getElementById("qtyPlus");
   const popupBtn = document.getElementById("popupActionBtn");
+  const notifPopup = document.getElementById("notifPopup");
+  const notifMsg = document.getElementById("notifMessage");
 
-  let maxStock = 1; // default
+  let maxStock = 1;
+  let currentProduct = null;
 
-  // Fungsi buka popup
   window.openPopup = function(product, action = 'keranjang') {
+    currentProduct = product;
     document.getElementById("popupImage").src = product.image;
     document.getElementById("popupName").innerText = product.nama;
     document.getElementById("popupPrice").innerText = 'Rp ' + product.harga.toLocaleString('id-ID');
     document.getElementById("popupStock").innerText = product.stok;
-    document.getElementById("popupQty").value = 1;
-
+    qtyInput.value = 1;
     maxStock = product.stok || 1;
     qtyInput.max = maxStock;
 
@@ -214,11 +243,8 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   closeBtn.addEventListener("click", closePopup);
-  popup.addEventListener("click", e => {
-    if (e.target === popup) closePopup();
-  });
+  popup.addEventListener("click", e => { if (e.target === popup) closePopup(); });
 
-  // Tombol qty dengan pembatas stok
   minusBtn.addEventListener("click", () => {
     let val = parseInt(qtyInput.value) || 1;
     if (val > 1) qtyInput.value = val - 1;
@@ -226,24 +252,69 @@ document.addEventListener("DOMContentLoaded", function() {
 
   plusBtn.addEventListener("click", () => {
     let val = parseInt(qtyInput.value) || 1;
-    if (val < maxStock) {
-      qtyInput.value = val + 1;
-    } else {
-      alert("Jumlah melebihi stok yang tersedia!");
-    }
+    if (val < maxStock) qtyInput.value = val + 1;
   });
 
-  // Tombol aksi
+  function showNotif(message, type="success") {
+    notifMsg.innerText = message;
+    notifPopup.classList.add("show");
+    notifPopup.style.display = "flex";
+
+    if (type === "error") {
+        notifPopup.style.backgroundColor = "#e74c3c"; // merah
+    } else {
+        notifPopup.style.backgroundColor = "#2ecc71"; // hijau
+    }
+
+    setTimeout(() => notifPopup.style.opacity = "1", 10);
+
+    setTimeout(() => {
+      notifPopup.style.opacity = "0";
+      setTimeout(() => {
+        notifPopup.classList.remove("show");
+        notifPopup.style.display = "none";
+      }, 300);
+    }, 1500);
+  }
+
   popupBtn.addEventListener("click", function() {
     const qty = parseInt(qtyInput.value);
     const action = this.dataset.action;
 
     if (qty > maxStock) {
-      alert("Jumlah melebihi stok yang tersedia!");
+      showNotif("Jumlah melebihi stok!");
       return;
     }
 
-    alert(`${action === 'beli' ? 'Beli Sekarang' : 'Tambah ke Keranjang'} - Jumlah: ${qty}`);
+    if (action === 'beli') {
+    // langsung ke checkout
+    window.location.href = `/checkout-now?product_id=${currentProduct.id}&qty=${qty}`;
+    } else {
+    // kirim AJAX ke controller
+    fetch('/cart/add', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+        product_id: currentProduct.id,
+        qty: qty
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+        showNotif(data.success, 'sucess');
+        } else {
+        showNotif(data.error || 'Gagal menambahkan produk ke keranjang', 'error');
+        }
+    })
+    .catch(() => {
+        showNotif('Terjadi kesalahan. Silakan coba lagi.', 'error');
+    });
+    }
+
     closePopup();
   });
 });

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Ayako')</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}">
   <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
@@ -33,7 +34,7 @@
     </div>
 
     <div class="nav-icons" id="nav-icons">
-      <a href="#"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
+      <a href="{{ url('/keranjang') }}"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
       <div class="dropdown">
         <img src="{{ asset('assets/user.svg') }}" alt="User" class="user-icon" id="userDropdownToggle">
         <div class="dropdown-menu" id="userDropdownMenu">

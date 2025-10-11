@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('home');
@@ -35,3 +37,18 @@ Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');
 // Catalog and Product
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/produk/{id}', [ProductController::class, 'show'])->name('produk.show');
+
+// Checkout and Cart
+Route::middleware(['auth'])->group(function () {
+    Route::post('/cart/add', [OrderController::class, 'addToCart'])->name('cart.add');
+    Route::get('/checkout-now', [OrderController::class, 'checkoutNow'])->name('checkout.now');
+    Route::get('/checkout', [OrderController::class, 'showCheckoutPage'])->name('checkout.page');
+});
+
+// CartController
+Route::middleware('auth')->group(function () {
+    Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/keranjang/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+    Route::post('/keranjang/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/keranjang/checkout', [CartController::class, 'checkoutSelected'])->name('cart.checkout');
+});
