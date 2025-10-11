@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Ayako')</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}">
+  <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
+  <script src="https://kit.fontawesome.com/cf71deb894.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="@yield('body-class')">
 
@@ -25,13 +29,12 @@
       <a href="{{ url('/') }}" class="{{ $current === '/' ? 'active' : '' }}">HOME</a>
       <a href="{{ url('/katalog') }}" class="{{ $current === 'katalog' ? 'active' : '' }}">KATALOG</a>
       <a href="{{ url('/fabric') }}" class="{{ $current === 'fabric' ? 'active' : '' }}">FABRIC</a>
-      <a href="{{ url('/profil') }}" class="{{ $current === 'profil' ? 'active' : '' }}">PROFIL</a>
+      <a href="{{ url('/profile-umkm') }}" class="{{ $current === 'profile-umkm' ? 'active' : '' }}">PROFIL</a>
       <a href="{{ url('/galeri') }}" class="{{ $current === 'galeri' ? 'active' : '' }}">GALERI</a>
     </div>
 
     <div class="nav-icons" id="nav-icons">
-      <a href="#"><img src="{{ asset('assets/search.svg') }}" alt="Search"></a>
-      <a href="#"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
+      <a href="{{ url('/keranjang') }}"><img src="{{ asset('assets/cart.svg') }}" alt="Cart"></a>
       <div class="dropdown">
         <img src="{{ asset('assets/user.svg') }}" alt="User" class="user-icon" id="userDropdownToggle">
         <div class="dropdown-menu" id="userDropdownMenu">
@@ -103,6 +106,35 @@
       }
     });
   </script>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-column footer-logo">
+        <img src="{{ asset('assets/logo_footer.jpg') }}" alt="Ayako Logo" class="footer-logo-img">
+        <p class="footer-brand">Handmade Bag Riau</p>
+      </div>
+
+      <div class="footer-column footer-info">
+        <h4>Alamat</h4>
+        <p>Jl. Bandara SU, Sidomulyo Tim,<br>
+        Kec. Marpoyan Damai, Kota Pekanbaru, Riau 28288</p>
+
+        <h4>Kontak</h4>
+        <p>0811-7680-059</p>
+
+        <h4>Email</h4>
+        <p>contohayako@gmail.com</p>
+      </div>
+
+      <div class="footer-column footer-links">
+        <h4>Tentang Kami</h4>
+        <a href="{{ url('/') }}">Home</a>
+        <a href="{{ url('/katalog') }}">Katalog</a>
+        <a href="{{ url('/profile-umkm') }}">Profil</a>
+        <a href="{{ url('/galeri') }}">Galeri</a>
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>

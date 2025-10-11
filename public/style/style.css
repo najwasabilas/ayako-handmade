@@ -11,6 +11,7 @@
 body, html {
   height: 100%;
   width: 100%;
+  background-color: #f7f3ea;
 }
 
 /* ============================= */
@@ -161,6 +162,7 @@ body.profile-page {
   padding-right: 31px;
   box-shadow: none;         /* hapus shadow */
   margin: 0 auto;        /* biar center & ada jarak dari nav */
+  margin-bottom: 100px;
 }
 
 /* Tombol back */
@@ -398,6 +400,78 @@ body.profile-page {
   }
 }
 
+/* ========================= */
+/* 🔶 Footer Ayako           */
+/* ========================= */
+.footer {
+  background-color: #A5632E; /* coklat seperti di gambar */
+  color: #fff;
+  padding: 40px 80px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-logo-img {
+  width: 160px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.footer-brand {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.footer-column h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.footer-column p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-links a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 5px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #f9e4cc; /* efek hover lembut */
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 40px;
+  }
+  .footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
 .error-alert {
       background-color: #f8d7da;
       color: #842029;
@@ -520,17 +594,16 @@ body.profile-page {
   margin-bottom: 40px;
 }
 .product-grid {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  flex-wrap: wrap;
 }
 .product-card {
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   padding: 20px;
-  width: 250px;
+  width: 100%;
 }
 .product-card img {
   width: 100%;
@@ -690,4 +763,525 @@ body.profile-page {
 
 .dropdown-menu form {
   margin: 0;
+}
+
+.profile-section {
+  padding: 60px 8%;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+.profile-title {
+  font-size: 30px;
+  color: #a5632e;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.profile-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+  gap: 40px;
+}
+
+.profile-block.reverse {
+  flex-direction: row-reverse;
+}
+
+.profile-block img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.profile-text {
+  flex: 1 1 50%;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.profile-text h3 {
+  color: #a5632e;
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-image {
+  flex: 1 1 45%;
+}
+
+.profile-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-text ul li {
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .profile-block,
+  .profile-block.reverse {
+    flex-direction: column;
+  }
+  .profile-section {
+    padding: 40px 20px;
+  }
+}
+
+/* ===== Hero Section: Ayako Logo Fullscreen ===== */
+.gallery-hero {
+  width: 100%;
+  max-width: 1440px;      /* batasi maksimal selebar gambar asli */
+  aspect-ratio: 1440 / 390; /* jaga rasio tinggi terhadap lebar */
+  margin: 0 auto;
+  background-color: #faf5ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.gallery-hero .hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* ====== Galeri Kegiatan ====== */
+.gallery-section {
+  padding: 60px 8%;
+  background-color: #faf5ef;
+  font-family: 'Poppins', sans-serif;
+}
+
+.gallery-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c2c2c;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.gallery-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.gallery-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.gallery-info h3 {
+  font-size: 18px;
+  color: #a5632e;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.gallery-info p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ====== Testimonial ====== */
+.testimonial-section {
+  background-color: #faf5ef;
+  padding: 60px 8%;
+}
+
+.testimonial-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  align-items: center;
+  gap: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.testimonial-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial-text {
+  padding: 40px;
+  position: relative;
+  color: #5b3a1b;
+}
+
+.quote-icon {
+  font-size: 50px;
+  color: #c89a68;
+  line-height: 1;
+  margin: 0;
+}
+
+.quote-icon.right {
+  text-align: right;
+  margin-top: -10px;
+}
+
+.quote-text {
+  font-size: 16px;
+  color: #4a4a4a;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .testimonial-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === HERO SECTION === */
+.catalog-hero {
+  width: 100%;
+  height: 390px;
+  overflow: hidden;
+}
+.catalog-hero .hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* === SEARCH BAR === */
+.catalog-search-filter {
+  background-color: #f7f2ea;
+  padding: 30px 0 10px;
+  text-align: center;
+}
+
+.search-wrapper {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 600px;
+  max-width: 90%;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px 20px;
+  font-size: 16px;
+  color: #5c3b0a;
+}
+
+.filter-button {
+  background-color: #a1642b;
+  border: none;
+  width: 60px;
+  height: 60px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* === CATEGORY FILTER === */
+.category-filter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-filter button {
+  background: #fff;
+  border: 1.5px solid #a1642b;
+  color: #5c3b0a;
+  border-radius: 20px;
+  padding: 6px 18px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-filter button.active,
+.category-filter button:hover {
+  background-color: #a1642b;
+  color: #fff;
+}
+
+/* === PRODUK GRID === */
+.catalog-products {
+  background-color: #f7f2ea;
+  padding: 40px 0 10px;
+}
+
+.products-grid-catalog {
+  background-color: #f7f2ea;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.product-card-catalog {
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  animation: fadeIn 0.8s ease;
+  width:100%;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card-catalog:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.product-card-catalog img {
+  width: 100%;
+  height: 100%; /* agak melebar */
+  object-fit: contain;
+  border-radius: 10px;
+  background-color: #faf8f6;
+}
+
+.product-info {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Nama produk */
+.product-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #3c2e1f;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* Harga + ikon sejajar */
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-footer .price {
+  font-weight: 600;
+  color: #a86b32;
+  font-size: 15px;
+}
+
+.product-footer .cart-icon {
+  font-size: 18px;
+  color: #a86b32;
+  transition: color 0.3s;
+}
+
+.product-footer .cart-icon:hover {
+  color: #71461f;
+}
+
+/* RESPONSIVE TABLET */
+@media (max-width: 992px) {
+  .products-grid-catalog {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 576px) {
+  .products-grid-catalog {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 8px;
+  }
+}   
+
+/* Efek fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === PAGINATION CUSTOM AYAKO STYLE === */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 8px;
+}
+
+.pagination li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination li a,
+.pagination li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: #7A4C1E; /* warna coklat khas Ayako */
+  border: 1px solid #E0C8A1;
+  background-color: #fffaf2;
+}
+
+/* Hover efek */
+.pagination li a:hover {
+  background-color: #F5E6D0;
+  transform: translateY(-2px);
+}
+
+/* Halaman aktif */
+.pagination li.active span {
+  background-color: #A86B32;
+  color: white;
+  border-color: #A86B32;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(168, 107, 50, 0.25);
+}
+
+/* Disabled state (Previous/Next pas tidak aktif) */
+.pagination li.disabled span {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f5f2ee;
+}
+
+/* Transisi smooth */
+.pagination li a,
+.pagination li span {
+  transition: all 0.2s ease-in-out;
+}
+
+.catalog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.search-form {
+  display: flex;
+  width: 60%;
+  max-width: 600px;
+  position: relative;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 1px solid #d8c7b3;
+  border-radius: 25px;
+  font-size: 15px;
+}
+
+.search-form .search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #a86b32;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cat-btn {
+  padding: 8px 18px;
+  border: 1px solid #a86b32;
+  color: #a86b32;
+  border-radius: 25px;
+  background: transparent;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.cat-btn:hover,
+.cat-btn.active {
+  background: #a86b32;
+  color: #fff;
 }
