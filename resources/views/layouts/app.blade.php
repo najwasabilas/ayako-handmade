@@ -6,6 +6,8 @@
   <title>@yield('title', 'Ayako')</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}">
   <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
+  <script src="https://kit.fontawesome.com/cf71deb894.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="@yield('body-class')">
 

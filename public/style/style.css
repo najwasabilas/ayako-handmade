@@ -11,6 +11,7 @@
 body, html {
   height: 100%;
   width: 100%;
+  background-color: #f7f3ea;
 }
 
 /* ============================= */
@@ -593,17 +594,16 @@ body.profile-page {
   margin-bottom: 40px;
 }
 .product-grid {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-  flex-wrap: wrap;
 }
 .product-card {
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   padding: 20px;
-  width: 250px;
+  width: 100%;
 }
 .product-card img {
   width: 100%;
@@ -977,3 +977,305 @@ body.profile-page {
   }
 }
 
+/* === HERO SECTION === */
+.catalog-hero {
+  width: 100%;
+  height: 390px;
+  overflow: hidden;
+}
+.catalog-hero .hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* === SEARCH BAR === */
+.catalog-search-filter {
+  background-color: #f7f2ea;
+  padding: 30px 0 10px;
+  text-align: center;
+}
+
+.search-wrapper {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 600px;
+  max-width: 90%;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px 20px;
+  font-size: 16px;
+  color: #5c3b0a;
+}
+
+.filter-button {
+  background-color: #a1642b;
+  border: none;
+  width: 60px;
+  height: 60px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* === CATEGORY FILTER === */
+.category-filter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-filter button {
+  background: #fff;
+  border: 1.5px solid #a1642b;
+  color: #5c3b0a;
+  border-radius: 20px;
+  padding: 6px 18px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-filter button.active,
+.category-filter button:hover {
+  background-color: #a1642b;
+  color: #fff;
+}
+
+/* === PRODUK GRID === */
+.catalog-products {
+  background-color: #f7f2ea;
+  padding: 40px 0 10px;
+}
+
+.products-grid-catalog {
+  background-color: #f7f2ea;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.product-card-catalog {
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  animation: fadeIn 0.8s ease;
+  width:100%;
+}
+
+.product-card-catalog:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.product-card-catalog img {
+  width: 100%;
+  height: 100%; /* agak melebar */
+  object-fit: contain;
+  border-radius: 10px;
+  background-color: #faf8f6;
+}
+
+.product-info {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Nama produk */
+.product-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #3c2e1f;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* Harga + ikon sejajar */
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-footer .price {
+  font-weight: 600;
+  color: #a86b32;
+  font-size: 15px;
+}
+
+.product-footer .cart-icon {
+  font-size: 18px;
+  color: #a86b32;
+  transition: color 0.3s;
+}
+
+.product-footer .cart-icon:hover {
+  color: #71461f;
+}
+
+/* RESPONSIVE TABLET */
+@media (max-width: 992px) {
+  .products-grid-catalog {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 576px) {
+  .products-grid-catalog {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 8px;
+  }
+}   
+
+/* Efek fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === PAGINATION CUSTOM AYAKO STYLE === */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 8px;
+}
+
+.pagination li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination li a,
+.pagination li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: #7A4C1E; /* warna coklat khas Ayako */
+  border: 1px solid #E0C8A1;
+  background-color: #fffaf2;
+}
+
+/* Hover efek */
+.pagination li a:hover {
+  background-color: #F5E6D0;
+  transform: translateY(-2px);
+}
+
+/* Halaman aktif */
+.pagination li.active span {
+  background-color: #A86B32;
+  color: white;
+  border-color: #A86B32;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(168, 107, 50, 0.25);
+}
+
+/* Disabled state (Previous/Next pas tidak aktif) */
+.pagination li.disabled span {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f5f2ee;
+}
+
+/* Transisi smooth */
+.pagination li a,
+.pagination li span {
+  transition: all 0.2s ease-in-out;
+}
+
+.catalog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.search-form {
+  display: flex;
+  width: 60%;
+  max-width: 600px;
+  position: relative;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 1px solid #d8c7b3;
+  border-radius: 25px;
+  font-size: 15px;
+}
+
+.search-form .search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #a86b32;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cat-btn {
+  padding: 8px 18px;
+  border: 1px solid #a86b32;
+  color: #a86b32;
+  border-radius: 25px;
+  background: transparent;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.cat-btn:hover,
+.cat-btn.active {
+  background: #a86b32;
+  color: #fff;
+}

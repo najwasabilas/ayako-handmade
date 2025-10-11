@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\CatalogController;
 
 Route::get('/', function () {
     return view('home');
@@ -29,3 +30,6 @@ Route::get('/profile-umkm', [ProfileController::class, 'index'])->name('profile-
 
 // Gallery
 Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');
+
+// Catalog
+Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
