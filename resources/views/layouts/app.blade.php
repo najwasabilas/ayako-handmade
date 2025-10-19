@@ -40,6 +40,7 @@
         <div class="dropdown-menu" id="userDropdownMenu">
           @auth
             <a href="{{ route('customer.profile') }}">Profile</a>
+            <a href="{{ route('orders.index') }}">Pesanan Saya</a>
             <form action="{{ route('logout') }}" method="POST">
               @csrf
               <button type="submit">Logout</button>
