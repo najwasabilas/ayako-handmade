@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderListController;
+use App\Http\Controllers\FabricController;
 
 Route::get('/', function () {
     return view('home');
@@ -69,3 +70,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pesanan/{id}/status', [OrderListController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::delete('/pesanan/{id}', [OrderListController::class, 'destroy'])->name('orders.destroy');
 });
+
+// FabricControler
+Route::get('/fabric', [FabricController::class, 'index'])->name('fabric.index');
