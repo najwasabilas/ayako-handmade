@@ -9,6 +9,8 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderListController;
 
 Route::get('/', function () {
     return view('home');
@@ -51,4 +53,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/keranjang/update', [CartController::class, 'updateQuantity'])->name('cart.update');
     Route::post('/keranjang/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/keranjang/checkout', [CartController::class, 'checkoutSelected'])->name('cart.checkout');
+});
+
+// CheckoutController
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.page');
+    Route::post('/checkout/place', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
+    Route::get('/checkout/payment/{id}', [CheckoutController::class, 'payment'])->name('checkout.payment');
+});
+
+// OrderListController
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pesanan-saya', [OrderListController::class, 'index'])->name('orders.index');
+    Route::get('/pesanan/{id}', [OrderListController::class, 'show'])->name('orders.show');
+    Route::post('/pesanan/{id}/status', [OrderListController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/pesanan/{id}', [OrderListController::class, 'destroy'])->name('orders.destroy');
 });

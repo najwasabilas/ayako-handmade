@@ -100,6 +100,7 @@ class CartController extends Controller
                 'harga' => $item->harga,
                 'qty' => $item->qty,
                 'total' => $item->harga * $item->qty,
+                'image' => $item->product->images->first()->gambar ?? 'no-image.jpg',   
             ];
         })->toArray()]);
 
