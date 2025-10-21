@@ -80,30 +80,30 @@ class CartController extends Controller
     public function checkoutSelected(Request $request)
     {
         $request->validate([
-            'selected_items' => 'required|array',
+            'selected_items' => 'nullable|array',
         ]);
 
-        $items = OrderItem::whereIn('id', $request->selected_items)
-                          ->with('product')
-                          ->get();
-
-        if ($items->isEmpty()) {
+        if (empty($request->selected_items)) {
             return redirect()->back()->with('error', 'Tidak ada produk yang dipilih untuk checkout.');
         }
 
-        // Simpan data sementara ke session
-        session(['checkout_items' => $items->map(function ($item) {
+        $items = OrderItem::whereIn('id', $request->selected_items)
+            ->with('product.images')
+            ->get();
+
+        $checkoutItems = $items->map(function ($item) {
             return [
                 'id' => $item->id,
-                'product_id' => $item->product_id,
                 'nama' => $item->product->nama,
                 'harga' => $item->harga,
                 'qty' => $item->qty,
-                'total' => $item->harga * $item->qty,
-                'image' => $item->product->images->first()->gambar ?? 'no-image.jpg',   
+                'gambar' => $item->product->images->first()->gambar ?? null,
             ];
-        })->toArray()]);
+        })->toArray();
+
+        session(['checkout_items' => $checkoutItems]);
 
         return redirect()->route('checkout.page');
     }
+
 }
