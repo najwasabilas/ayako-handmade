@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Session\Store;
 use Illuminate\Session\ArraySessionHandler;
 
-uses(Tests\TestCase::class, RefreshDatabase::class);
 
 test('showRegister returns a view instance', function () {
     $controller = new AuthController();
