@@ -19,7 +19,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password'), // default password
             'phone' => fake()->phoneNumber(),
             'profile_picture' => fake()->imageUrl(200, 200, 'people'),
-            'role' => fake()->randomElement(['user', 'admin']),
+            'role' => fake()->randomElement(['customer', 'admin']),
             'remember_token' => Str::random(10),
         ];
     }

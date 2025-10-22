@@ -1,130 +1,129 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+namespace Tests\Unit;
+
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Session\Store;
-use Illuminate\Session\ArraySessionHandler;
+use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\AuthController;
+use App\Models\User;
 
+class AuthControllerTest extends TestCase
+{
+    use RefreshDatabase;
 
-test('showRegister returns a view instance', function () {
-    $controller = new AuthController();
-    $response = $controller->showRegister();
-    $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-});
+    protected AuthController $controller;
 
-test('showLogin returns a view instance', function () {
-    $controller = new AuthController();
-    $response = $controller->showLogin();
-    $this->assertInstanceOf(\Illuminate\View\View::class, $response);
-});
-
-test('register success creates user, logs in and redirects to home', function () {
-    $request = Request::create('/register', 'POST', [
-        'name' => 'Unit Tester',
-        'email' => 'unit@test.com',
-        'password' => 'secret123',
-        'password_confirmation' => 'secret123',
-    ]);
-
-    $this->assertDatabaseCount('users', 0);
-
-    $controller = new AuthController();
-    $response = $controller->register($request);
-
-    $this->assertInstanceOf(RedirectResponse::class, $response);
-    $this->assertDatabaseHas('users', [
-        'email' => 'unit@test.com',
-        'name' => 'Unit Tester',
-    ]);
-
-    $user = \App\Models\User::where('email', 'unit@test.com')->first();
-    $this->assertNotNull($user);
-    $this->assertTrue(Hash::check('secret123', $user->password));
-    $this->assertAuthenticatedAs($user);
-});
-
-test('register validation fails throws ValidationException and no user created', function () {
-    $request = Request::create('/register', 'POST', []);
-    $controller = new AuthController();
-
-    $this->expectException(\Illuminate\Validation\ValidationException::class);
-
-    try {
-        $controller->register($request);
-    } finally {
-        $this->assertDatabaseCount('users', 0);
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->controller = new AuthController();
     }
-});
 
-test('login success attempts auth, regenerates session and redirects to home', function () {
-    $password = 'mypwd';
-    $user = \App\Models\User::create([
-        'name' => 'Login User',
-        'email' => 'loginuser@example.com',
-        'password' => bcrypt($password),
-        'role' => 'customer',
-    ]);
+    public function test_tampilkan_halaman_register_mengembalikan_view()
+    {
+        $response = $this->controller->showRegister();
+        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
+    }
 
-    $request = Request::create('/login', 'POST', [
-        'email' => 'loginuser@example.com',
-        'password' => $password,
-    ]);
+    public function test_tampilkan_halaman_login_mengembalikan_view()
+    {
+        $response = $this->controller->showLogin();
+        $this->assertInstanceOf(\Illuminate\View\View::class, $response);
+    }
 
-    // set a proper session store (ArraySessionHandler needs minutes argument)
-    $session = new Store('laravel_session', new ArraySessionHandler(120));
-    $request->setLaravelSession($session);
+    public function test_register_berhasil_membuat_user_dan_redirect_ke_home()
+    {
+        $request = Request::create('/register', 'POST', [
+            'name' => 'Unit Tester',
+            'email' => 'unit@test.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+        ]);
 
-    $controller = new AuthController();
-    $response = $controller->login($request);
+        $response = $this->controller->register($request);
 
-    $this->assertInstanceOf(RedirectResponse::class, $response);
-    $this->assertAuthenticatedAs($user);
-});
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertDatabaseHas('users', ['email' => 'unit@test.com']);
 
-test('login fail returns back with errors and user remains guest', function () {
-    \App\Models\User::create([
-        'name' => 'Try User',
-        'email' => 'tryuser@example.com',
-        'password' => bcrypt('rightpwd'),
-        'role' => 'customer',
-    ]);
+        $user = User::where('email', 'unit@test.com')->first();
+        $this->assertTrue(Hash::check('secret123', $user->password));
+        $this->assertAuthenticatedAs($user);
+        $this->assertEquals(route('home'), $response->getTargetUrl());
+    }
 
-    $request = Request::create('/login', 'POST', [
-        'email' => 'tryuser@example.com',
-        'password' => 'wrongpwd',
-    ]);
+    public function test_register_gagal_jika_data_tidak_valid()
+    {
+        $request = Request::create('/register', 'POST', []);
+        $this->expectException(ValidationException::class);
+        $this->controller->register($request);
+    }
 
-    $session = new Store('laravel_session', new ArraySessionHandler(120));
-    $request->setLaravelSession($session);
+    public function test_login_berhasil_dan_redirect_ke_home()
+    {
+        $user = User::factory()->create([
+            'email' => 'login@example.com',
+            'password' => bcrypt('secret123'),
+            'role' => 'customer',
+        ]);
 
-    $controller = new AuthController();
-    $response = $controller->login($request);
+        $request = Request::create('/login', 'POST', [
+            'email' => 'login@example.com',
+            'password' => 'secret123',
+        ]);
 
-    $this->assertInstanceOf(RedirectResponse::class, $response);
-    $this->assertGuest();
-});
+        // Tambahkan session secara manual
+        $request->setLaravelSession(app('session')->driver());
 
-test('logout invalidates session, regenerates token and redirects to login', function () {
-    $user = \App\Models\User::create([
-        'name' => 'UserToLogout',
-        'email' => 'logout@example.com',
-        'password' => bcrypt('pwd'),
-        'role' => 'customer',
-    ]);
+        $response = $this->controller->login($request);
 
-    $this->actingAs($user);
+        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertEquals(route('home'), $response->getTargetUrl());
+        $this->assertAuthenticatedAs($user);
+    }
 
-    $request = Request::create('/logout', 'POST');
-    $session = new Store('laravel_session', new ArraySessionHandler(120));
-    $request->setLaravelSession($session);
 
-    $controller = new AuthController();
-    $response = $controller->logout($request);
 
-    $this->assertInstanceOf(RedirectResponse::class, $response);
-    $this->assertStringContainsString('login', $response->getTargetUrl());
-    $this->assertGuest();
-});
+    public function test_login_gagal_mengembalikan_error_dan_tetap_guest()
+    {
+        $user = User::factory()->create([
+            'email' => 'wrong@example.com',
+            'password' => bcrypt('secret123'),
+        ]);
+
+        $request = Request::create('/login', 'POST', [
+            'email' => 'wrong@example.com',
+            'password' => 'invalid',
+        ]);
+
+        $response = $this->controller->login($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertGuest();
+        $this->assertTrue(session()->has('errors'));
+    }
+
+    public function test_logout_berhasil_menghapus_session_dan_redirect_ke_login()
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+        ]);
+
+        $this->actingAs($user);
+
+        $request = Request::create('/logout', 'POST');
+
+        // Inject session secara manual
+        $request->setLaravelSession(app('session')->driver());
+
+        $response = $this->controller->logout($request);
+
+        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
+        $this->assertEquals(route('login'), $response->getTargetUrl());
+        $this->assertGuest();
+    }
+
+}

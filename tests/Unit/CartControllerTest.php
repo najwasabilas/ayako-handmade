@@ -1,147 +1,330 @@
 <?php
 
+namespace Tests\Unit;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
+
 use App\Http\Controllers\CartController;
+use App\Models\User;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
-use Mockery;
+use App\Models\ProductImage;
 
-beforeEach(function () {
-    // bersihkan mock sebelum tiap test
-    Mockery::close();
-});
+class CartControllerTest extends TestCase
+{
+    use RefreshDatabase;
 
-afterEach(function () {
-    Mockery::close();
-});
+    protected CartController $controller;
+    protected User $user;
 
-test('index menampilkan view dengan item keranjang aktif', function () {
-    $mockOrder = Mockery::mock(Order::class);
-    $mockItem = Mockery::mock(OrderItem::class);
-    $mockProduct = Mockery::mock(Product::class);
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    $mockProduct->nama = 'Kalung Emas';
-    $mockItem->product = $mockProduct;
-    $mockOrder->items = collect([$mockItem]);
+        // controller instance
+        $this->controller = new CartController();
 
-    Auth::shouldReceive('id')->once()->andReturn(1);
+        // create user explicitly to avoid factory/HasFactory issues;
+        $this->user = User::create([
+            'name' => 'Unit User',
+            'email' => 'unituser@example.test',
+            'password' => bcrypt('password'),
+            // pastikan role valid sesuai constraint DB; ganti 'customer' jika DB memerlukan itu
+            'role' => 'customer',
+        ]);
 
-    // Mock query Eloquent
-    $mockBuilder = Mockery::mock();
-    $mockBuilder->shouldReceive('where')->with('user_id', 1)->andReturnSelf();
-    $mockBuilder->shouldReceive('where')->with('status', 'cart')->andReturnSelf();
-    $mockBuilder->shouldReceive('with')->with('items.product')->andReturnSelf();
-    $mockBuilder->shouldReceive('first')->andReturn($mockOrder);
+        // authenticate user for controller methods that depend on Auth::id()
+        $this->actingAs($this->user);
+    }
 
-    Mockery::mock('alias:' . Order::class)
-        ->shouldReceive('where')
-        ->andReturn($mockBuilder);
+    /* ---------------------------
+       INDEX (view cart)
+       --------------------------- */
 
-    // Mock view
-    View::shouldReceive('make')
-        ->once()
-        ->with('cart.index', Mockery::type('array'))
-        ->andReturn('cart view');
+    public function test_index_returns_view_with_items_when_cart_exists(): void
+    {
+        // make product and order + order item (create directly, not with factories)
+        $product = Product::create([
+            'nama' => 'Totebag Songket',
+            'deskripsi' => 'Deskripsi',
+            'harga' => 50000,
+            'stok' => 10,
+            'kategori' => 'Fashion',
+        ]);
 
-    $controller = new CartController();
-    $response = $controller->index();
+        $order = Order::create([
+            'user_id' => $this->user->id,
+            'status' => 'cart',
+            'total' => 0,
+            'alamat' => 'Jl. Test No.1',
+        ]);
 
-    expect($response)->toBe('cart view');
-});
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'qty' => 2,
+            'harga' => $product->harga,
+        ]);
 
-test('updateQuantity berhasil memperbarui jumlah item', function () {
-    $mockProduct = Mockery::mock(Product::class);
-    $mockProduct->stok = 10;
+        $response = $this->controller->index();
 
-    $mockOrder = Mockery::mock(Order::class);
-    $mockOrderItem = Mockery::mock(OrderItem::class);
-    $mockOrderItem->product = $mockProduct;
-    $mockOrderItem->qty = 2;
-    $mockOrderItem->order = $mockOrder;
-    $mockOrderItem->harga = 10000;
+        $this->assertInstanceOf(View::class, $response);
 
-    // Mock model find
-    Mockery::mock('alias:' . OrderItem::class)
-        ->shouldReceive('with')->with('product')->andReturnSelf()
-        ->shouldReceive('find')->with(1)->andReturn($mockOrderItem);
+        $data = $response->getData();
+        $this->assertArrayHasKey('items', $data);
+        $this->assertCount(1, $data['items']);
+        $this->assertEquals($product->id, $data['items'][0]->product_id);
+    }
 
-    // Mock save & update total
-    $mockOrderItem->shouldReceive('save')->once();
-    $mockOrder->shouldReceive('update')->once();
+    public function test_index_returns_empty_collection_when_no_cart_exists(): void
+    {
+        // Ensure there is no order with status 'cart' for this user
+        $response = $this->controller->index();
 
-    $controller = new CartController();
-    $request = new Request(['item_id' => 1, 'qty' => 5]);
+        $this->assertInstanceOf(View::class, $response);
 
-    $response = $controller->updateQuantity($request);
-    $data = $response->getData(true);
+        $data = $response->getData();
+        $this->assertArrayHasKey('items', $data);
+        $this->assertCount(0, $data['items']);
+    }
 
-    expect($data['success'])->toBe('Jumlah berhasil diperbarui');
-});
+    /* ---------------------------
+       updateQuantity
+       --------------------------- */
 
-test('updateQuantity gagal jika qty melebihi stok', function () {
-    $mockProduct = Mockery::mock(Product::class);
-    $mockProduct->stok = 3;
+    public function test_updateQuantity_successfully_updates_qty(): void
+    {
+        $product = Product::create([
+            'nama' => 'Totebag Songket',
+            'deskripsi' => 'Desc',
+            'harga' => 30000,
+            'stok' => 10,
+            'kategori' => 'Fashion',
+        ]);
 
-    $mockOrderItem = Mockery::mock(OrderItem::class);
-    $mockOrderItem->product = $mockProduct;
+        $order = Order::create([
+            'user_id' => $this->user->id,
+            'status' => 'cart',
+            'total' => 0,
+            'alamat' => 'Alamat',
+        ]);
 
-    Mockery::mock('alias:' . OrderItem::class)
-        ->shouldReceive('with')->with('product')->andReturnSelf()
-        ->shouldReceive('find')->with(1)->andReturn($mockOrderItem);
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'qty' => 1,
+            'harga' => $product->harga,
+        ]);
 
-    $controller = new CartController();
-    $request = new Request(['item_id' => 1, 'qty' => 10]);
+        $request = Request::create('/cart/update', 'POST', [
+            'item_id' => $item->id,
+            'qty' => 5,
+        ]);
 
-    $response = $controller->updateQuantity($request);
-    $data = $response->getData(true);
+        $response = $this->controller->updateQuantity($request);
 
-    expect($data['error'])->toBe('Jumlah melebihi stok tersedia');
-});
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
 
-test('remove menghapus item dan update total order', function () {
-    $mockOrder = Mockery::mock(Order::class);
-    $mockOrder->shouldReceive('update')->once();
+        $this->assertDatabaseHas('order_items', [
+            'id' => $item->id,
+            'qty' => 5,
+        ]);
 
-    $mockItem = Mockery::mock(OrderItem::class);
-    $mockItem->order = $mockOrder;
-    $mockItem->shouldReceive('delete')->once();
+        // total updated on order
+        $order->refresh();
+        $expectedTotal = $order->items->sum(fn($i) => $i->qty * $i->harga);
+        $this->assertEquals($expectedTotal, $order->total);
+    }
 
-    Mockery::mock('alias:' . OrderItem::class)
-        ->shouldReceive('findOrFail')->with(1)->andReturn($mockItem);
+    public function test_updateQuantity_fails_when_qty_exceeds_stock(): void
+    {
+        $product = Product::create([
+            'nama' => 'Totebag Songket',
+            'deskripsi' => 'Desc',
+            'harga' => 40000,
+            'stok' => 2,
+            'kategori' => 'Fashion',
+        ]);
 
-    $controller = new CartController();
-    $request = new Request(['id' => 1]);
+        $order = Order::create([
+            'user_id' => $this->user->id,
+            'status' => 'cart',
+            'total' => 0,
+            'alamat' => 'Alamat',
+        ]);
 
-    $response = $controller->remove($request);
-    $data = $response->getData(true);
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'qty' => 1,
+            'harga' => $product->harga,
+        ]);
 
-    expect($data['success'])->toBeTrue();
-});
+        $request = Request::create('/cart/update', 'POST', [
+            'item_id' => $item->id,
+            'qty' => 5, // melebihi stok 2
+        ]);
 
-test('checkoutSelected menyimpan item terpilih ke session dan redirect ke checkout.page', function () {
-    $mockProduct = Mockery::mock(Product::class);
-    $mockProduct->nama = 'Gelang';
-    $mockProduct->images = collect([(object)['gambar' => 'img1.jpg']]);
+        $response = $this->controller->updateQuantity($request);
 
-    $mockItem = Mockery::mock(OrderItem::class);
-    $mockItem->id = 1;
-    $mockItem->product_id = 5;
-    $mockItem->harga = 20000;
-    $mockItem->qty = 2;
-    $mockItem->product = $mockProduct;
+        // controller returns 400 with json error
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(['error' => 'Jumlah melebihi stok tersedia'], $response->getData(true));
+    }
 
-    Mockery::mock('alias:' . OrderItem::class)
-        ->shouldReceive('whereIn')->andReturnSelf()
-        ->shouldReceive('with')->andReturnSelf()
-        ->shouldReceive('get')->andReturn(collect([$mockItem]));
+    public function test_updateQuantity_validation_fails_when_input_invalid(): void
+    {
+        $this->expectException(ValidationException::class);
 
-    $controller = new CartController();
-    $request = new Request(['selected_items' => [1]]);
+        // missing item_id
+        $request = Request::create('/cart/update', 'POST', [
+            'qty' => 2,
+        ]);
 
-    $response = $controller->checkoutSelected($request);
+        $this->controller->updateQuantity($request);
+    }
 
-    expect($response->getTargetUrl())->toContain('checkout.page');
-});
+    /* ---------------------------
+       remove
+       --------------------------- */
+
+    public function test_remove_deletes_item_and_updates_order_total(): void
+    {
+        $product = Product::create([
+            'nama' => 'Totebag Songket',
+            'deskripsi' => 'Desc',
+            'harga' => 20000,
+            'stok' => 10,
+            'kategori' => 'Fashion',
+        ]);
+
+        $order = Order::create([
+            'user_id' => $this->user->id,
+            'status' => 'cart',
+            'total' => 0,
+            'alamat' => 'Alamat',
+        ]);
+
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'qty' => 2,
+            'harga' => $product->harga,
+        ]);
+
+        $request = Request::create('/cart/remove', 'POST', [
+            'id' => $item->id,
+        ]);
+
+        $response = $this->controller->remove($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['success' => true], $response->getData(true));
+
+        $this->assertDatabaseMissing('order_items', ['id' => $item->id]);
+    }
+
+    public function test_remove_validation_fails_for_invalid_id(): void
+    {
+        $this->expectException(ValidationException::class);
+
+        $request = Request::create('/cart/remove', 'POST', [
+            'id' => 999999, // does not exist
+        ]);
+
+        $this->controller->remove($request);
+    }
+
+    /* ---------------------------
+       checkoutSelected
+       --------------------------- */
+
+    public function test_checkoutSelected_saves_items_to_session_and_redirects(): void
+    {
+        $product = Product::create([
+            'nama' => 'Totebag Songket',
+            'deskripsi' => 'Desc',
+            'harga' => 50000,
+            'stok' => 10,
+            'kategori' => 'Fashion',
+        ]);
+
+        // ensure product has image so controller can access images->first()->gambar
+        if (class_exists(ProductImage::class)) {
+            ProductImage::create([
+                'product_id' => $product->id,
+                'gambar' => 'img-test.jpg',
+            ]);
+        }
+
+        $order = Order::create([
+            'user_id' => $this->user->id,
+            'status' => 'cart',
+            'total' => 0,
+            'alamat' => 'Alamat',
+        ]);
+
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'qty' => 2,
+            'harga' => $product->harga,
+        ]);
+
+        $request = Request::create('/cart/checkout', 'POST', [
+            'selected_items' => [$item->id],
+        ]);
+
+        // call controller
+        $response = $this->controller->checkoutSelected($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals(route('checkout.page'), $response->getTargetUrl());
+
+        // session data must be set
+        $checkoutItems = session('checkout_items');
+        $this->assertIsArray($checkoutItems);
+        $this->assertCount(1, $checkoutItems);
+        $this->assertEquals($item->id, $checkoutItems[0]['id']);
+        $this->assertEquals($product->nama, $checkoutItems[0]['nama']);
+    }
+
+    public function test_checkoutSelected_fails_when_selected_items_empty(): void
+    {
+        // when array empty, controller redirects back with error flash
+        $request = Request::create('/cart/checkout', 'POST', [
+            'selected_items' => [],
+        ]);
+
+        $response = $this->controller->checkoutSelected($request);
+
+        // redirect back → session should have flash 'error'
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertTrue(session()->has('error'));
+        $this->assertEquals('Tidak ada produk yang dipilih untuk checkout.', session('error'));
+    }
+
+   public function test_checkoutSelected_validation_fails_when_missing(): void
+{
+    $request = Request::create('/cart/checkout', 'POST', [
+        // missing selected_items
+    ]);
+
+    $response = $this->controller->checkoutSelected($request);
+
+    $this->assertInstanceOf(RedirectResponse::class, $response);
+    $this->assertTrue(session()->has('error'));
+    $this->assertEquals('Tidak ada produk yang dipilih untuk checkout.', session('error'));
+}
+
+}
