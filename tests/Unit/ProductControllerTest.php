@@ -2,27 +2,28 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use App\Http\Controllers\ProductController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use App\Models\Product;
-use Illuminate\View\View;
 
 class ProductControllerTest extends TestCase
 {
     public function test_show_method_returns_view_instance(): void
     {
-        // Since we can't easily mock Eloquent in unit tests,
-        // we'll test the method structure instead
+        // Karena tidak bisa mudah mock Eloquent di unit test,
+        // kita test struktur methodnya saja
         $controller = new ProductController();
         
-        // Verify the method exists and is callable
+        // Verifikasi method ada dan bisa dipanggil
         $this->assertTrue(method_exists($controller, 'show'));
         $this->assertIsCallable([$controller, 'show']);
     }
 
     public function test_show_method_returns_correct_view_name_concept(): void
     {
-        // Test the concept that show method should return a view
+        // Test konsep bahwa method show harus return view
         $controller = new ProductController();
         
         $this->assertTrue(method_exists($controller, 'show'));
@@ -32,7 +33,7 @@ class ProductControllerTest extends TestCase
     {
         $controller = new ProductController();
         
-        // Use reflection to inspect the method parameters
+        // Pakai reflection untuk inspect parameter method
         $reflection = new \ReflectionMethod($controller, 'show');
         $parameters = $reflection->getParameters();
         
@@ -48,14 +49,14 @@ class ProductControllerTest extends TestCase
 
     public function test_show_method_returns_view_type(): void
     {
-        // Test that the method is declared to contain view-related logic
+        // Test bahwa method dideklarasikan mengandung logic view
         $controller = new ProductController();
         $reflection = new \ReflectionMethod($controller, 'show');
         
-        // Verify it's a public method
+        // Verifikasi ini method public
         $this->assertTrue($reflection->isPublic());
         
-        // Verify it has exactly one parameter
+        // Verifikasi punya tepat satu parameter
         $this->assertCount(1, $reflection->getParameters());
     }
 
@@ -75,10 +76,10 @@ class ProductControllerTest extends TestCase
 
     public function test_view_concept_is_correct(): void
     {
-        // Test the concept without using Laravel helpers
+        // Test konsep tanpa menggunakan helper Laravel
         $expectedView = 'products.detail';
         
-        // Verify the view name follows Laravel convention
+        // Verifikasi nama view mengikuti convention Laravel
         $this->assertStringContainsString('.', $expectedView);
         $this->assertStringStartsWith('products', $expectedView);
     }
@@ -88,23 +89,23 @@ class ProductControllerTest extends TestCase
         $controller = new ProductController();
         $reflection = new \ReflectionMethod($controller, 'show');
         
-        // Check method is public
+        // Cek method adalah public
         $this->assertTrue($reflection->isPublic());
         
-        // Check it has one parameter
+        // Cek punya satu parameter
         $parameters = $reflection->getParameters();
         $this->assertCount(1, $parameters);
         
-        // Check parameter name
+        // Cek nama parameter
         $this->assertEquals('id', $parameters[0]->getName());
     }
 
     public function test_compact_function_concept(): void
     {
-        // Test that we understand how compact works
+        // Test bahwa kita paham bagaimana compact bekerja
         $product = 'mock_product';
         
-        // Simulate what compact('product') does
+        // Simulasikan apa yang compact('product') lakukan
         $data = ['product' => $product];
         
         $this->assertArrayHasKey('product', $data);
