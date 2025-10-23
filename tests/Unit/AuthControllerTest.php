@@ -124,6 +124,4 @@ class AuthControllerTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $response);
         $this->assertEquals(route('login'), $response->getTargetUrl());
         $this->assertGuest();
-    }
-
-}
+    }}

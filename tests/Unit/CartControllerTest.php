@@ -325,6 +325,4 @@ class CartControllerTest extends TestCase
     $this->assertInstanceOf(RedirectResponse::class, $response);
     $this->assertTrue(session()->has('error'));
     $this->assertEquals('Tidak ada produk yang dipilih untuk checkout.', session('error'));
-}
-
-}
+}}
