@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Customer</title>
+  <title>Atur Ulang Password</title>
   <link rel="stylesheet" href="{{ asset('style/style.css') }}" />
   <link rel="icon" href="{{ asset('assets/logo_ayako_icon.png') }}" type="image/png">
 </head>
@@ -13,7 +13,8 @@
       <div class="left-side"></div>
 
       <div class="right-side">
-        <h2>Form Login</h2>
+        <h2>Atur Ulang Password</h2>
+
         @if ($errors->any())
           <div class="alert-error">
             <ul>
@@ -24,17 +25,18 @@
           </div>
         @endif
 
-        <form method="POST" class="register-form" action="{{ url('/login') }}">
-            @csrf
-          <input type="email" name="email" placeholder="Masukkan Email" required />
-          <input type="password" name="password" placeholder="Masukkan Password" required />
-          <p class="forgot-password"><a href="{{ route('password.request') }}">Lupa password?</a></p>
+        <form method="POST" action="{{ route('password.update') }}" class="register-form">
+          @csrf
+          <input type="hidden" name="token" value="{{ $token }}">
 
-          <button type="submit" class="btn-daftar">Masuk</button>
+          <input type="password" name="password" placeholder="Password Baru" required />
+          <input type="password" name="password_confirmation" placeholder="Konfirmasi Password Baru" required />
+
+          <button type="submit" class="btn-daftar">Ubah Password</button>
         </form>
 
         <p class="login-text">
-          Belum punya akun? <a href="{{ route('register') }}" class="login-link">Daftar sekarang</a>
+          Kembali ke <a href="{{ route('login') }}" class="login-link">Login</a>
         </p>
       </div>
     </div>
