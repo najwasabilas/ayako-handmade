@@ -15,11 +15,16 @@ class CheckoutController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+        $addresses = $user->addresses()
+            ->orderByDesc('utama') // alamat utama paling atas
+            ->get();
+
         $items = session('checkout_items', []);
         if (empty($items)) {
             return redirect()->route('cart.index')->with('error', 'Tidak ada produk yang dipilih untuk checkout.');
         }
-        
+
         if (isset($items['product_id'])) {
             $items = [$items]; // jika single item, ubah ke array of array
         }
@@ -27,7 +32,7 @@ class CheckoutController extends Controller
         $subtotal = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);
         $total = $subtotal;
 
-        return view('checkout.index', compact('items', 'total'));
+        return view('checkout.index', compact('items', 'total', 'addresses'));
     }
 
     /**
@@ -35,11 +40,7 @@ class CheckoutController extends Controller
      */
     public function placeOrder(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'telepon' => 'required|string|max:20',
-            'alamat_lengkap' => 'required|string|max:500',
-        ]);
+        $user = Auth::user();
 
         $items = session('checkout_items', []);
         if (empty($items)) {
@@ -49,15 +50,42 @@ class CheckoutController extends Controller
             $items = [$items]; // jika single item, ubah ke array of array
         }
 
+        // Jika user isi alamat baru
+        if ($request->filled('nama_penerima_baru') && $request->filled('telepon_baru') && $request->filled('alamat_lengkap_baru')) {
+            // Jika alamat baru dijadikan utama, set yang lama jadi false dulu
+            if ($user->addresses()->count() >= 5) {
+                return back()->with('error', 'Maksimal 5 alamat pengiriman.');
+            }
+            if ($request->has('is_default_baru')) {
+                $user->addresses()->update(['utama' => false]);
+            }
+
+            $address = $user->addresses()->create([
+                'nama_penerima' => $request->nama_penerima_baru,
+                'no_hp' => $request->telepon_baru,
+                'alamat_lengkap' => $request->alamat_lengkap_baru,
+                'utama' => $request->has('is_default_baru'),
+            ]);
+        } else {
+            // Jika user pilih alamat dari list
+            $address = $user->addresses()->find($request->address_id);
+
+            // Kalau belum punya sama sekali, validasi minimal
+            if (!$address) {
+                return back()->with('error', 'Silakan pilih atau tambahkan alamat terlebih dahulu.');
+            }
+        }
+
+        // Buat string alamat gabungan untuk order
+        $alamatGabung = "{$address->nama_penerima} | {$address->telepon} | {$address->alamat_lengkap}";
+
+        // Hitung total
         $subtotal = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);
         $total = $subtotal; // tanpa ongkir
 
-        // Gabungkan alamat
-        $alamatGabung = "{$request->nama} | {$request->telepon} | {$request->alamat_lengkap}";
-
         // Buat order baru
         $order = Order::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'status' => 'Belum dibayar',
             'total' => $total,
             'alamat' => $alamatGabung,
@@ -75,13 +103,13 @@ class CheckoutController extends Controller
             // Kurangi stok produk
             $product = Product::find($item['product_id']);
             if ($product) {
-                $product->stok -= $item['qty'];
+                $product->stok = max(0, $product->stok - $item['qty']);
                 $product->save();
             }
         }
 
-        // Hapus item dari order status 'cart'
-        $cartOrder = Order::where('user_id', Auth::id())
+        // Hapus dari cart
+        $cartOrder = Order::where('user_id', $user->id)
             ->where('status', 'cart')
             ->first();
 
@@ -90,18 +118,16 @@ class CheckoutController extends Controller
                 ->whereIn('product_id', array_column($items, 'product_id'))
                 ->delete();
 
-            // Jika sudah kosong, hapus order cart-nya juga
             if ($cartOrder->items()->count() === 0) {
                 $cartOrder->delete();
             }
         }
 
-        // Bersihkan session
         session()->forget('checkout_items');
 
-        // Redirect ke halaman pembayaran
         return redirect()->route('checkout.payment', $order->id)->with('success', 'Pesanan berhasil dibuat!');
     }
+
 
     /**
      * Menampilkan halaman pembayaran

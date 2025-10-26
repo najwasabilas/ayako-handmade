@@ -35,6 +35,8 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [CustomerController::class, 'profile'])->name('customer.profile');
     Route::post('/profile', [CustomerController::class, 'updateProfile']);
+    Route::post('/profile/address', [ProfileController::class, 'updateAddress'])->middleware('auth');
+    Route::delete('/checkout/delete-address/{id}', [ProfileController::class, 'deleteAddress'])->name('checkout.deleteAddress');
 });
 
 // Profil UMKM

@@ -32,6 +32,26 @@
 
           <button type="submit" class="btn-save">Simpan Perubahan</button>
         </form>
+        <h2>Alamat Utama</h2>
+        <hr>
+        <form method="POST" action="{{ url('/profile/address') }}">
+          @csrf
+
+          @php
+            $alamat = $user->mainAddress;
+          @endphp
+
+          <label>Nama Penerima</label>
+          <input type="text" name="nama_penerima" value="{{ $alamat->nama_penerima ?? '' }}">
+
+          <label>Nomor Telepon</label>
+          <input type="text" name="no_hp" value="{{ $alamat->no_hp ?? '' }}">
+
+          <label>Alamat Lengkap</label>
+          <textarea name="alamat_lengkap" rows="3">{{ $alamat->alamat_lengkap ?? '' }}</textarea>
+
+          <button type="submit" class="btn-save">Simpan Alamat</button>
+        </form>
       </div>
 
       <!-- Edit Foto -->
@@ -61,6 +81,8 @@
         </div>
         </form>
 
+
+
     <script>
     document.getElementById('fileInput').addEventListener('change', function () {
         document.getElementById('photoUploadForm').submit();
@@ -70,4 +92,13 @@
 
     </div>
   </div>
+  <style>
+    .profile-form textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+  </style>
 @endsection
