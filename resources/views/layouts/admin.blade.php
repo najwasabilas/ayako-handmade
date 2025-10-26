@@ -30,7 +30,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ route('admin.products.index') }}" class="{{ request()->routeIs('admin.products.index') ? 'active' : '' }}">
                             <i class="fa-solid fa-bag-shopping"></i> Produk
                         </a>
                     </li>

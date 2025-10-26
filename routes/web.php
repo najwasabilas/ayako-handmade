@@ -38,6 +38,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/export-pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::post('/orders/update-status', [AdminController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products.index');
+    Route::get('/admin/products/create', [AdminController::class, 'createProduct'])->name('admin.products.create');
+    Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.store');
+    Route::get('/admin/products/{product}/edit', [AdminController::class, 'editProduct'])->name('admin.products.edit');
+    Route::put('/admin/products/{product}', [AdminController::class, 'updateProduct'])->name('admin.products.update');
 });
 
 

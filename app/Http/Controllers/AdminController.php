@@ -102,4 +102,115 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
     }
+    public function products(Request $request)
+    {
+        $search = $request->get('search');
+        $category = $request->get('category', 'all');
+
+        $query = Product::query();
+
+        if ($search) {
+            $query->where('nama', 'like', "%$search%");
+        }
+
+        if ($category !== 'all') {
+            $query->where('kategori', $category);
+        }
+
+        $products = $query->paginate(10);
+
+        // Statistik untuk card
+        $totalProduk = Product::count();
+        $stokHabis = Product::where('stok', 0)->count();
+        $kategoriList = Product::select('kategori')->distinct()->pluck('kategori');
+        $kategoriCount = $kategoriList->count();
+
+        return view('admin.products', compact(
+            'products',
+            'kategoriList',
+            'totalProduk',
+            'stokHabis',
+            'kategoriCount',
+            'search',
+            'category'
+        ));
+    }
+    public function createProduct()
+    {
+        $kategoriList = Product::select('kategori')->distinct()->pluck('kategori');
+        return view('admin.products.create', compact('kategoriList'));
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'required|string',
+            'stok' => 'required|integer|min:0',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // Simpan produk
+        $product = Product::create($validated);
+
+        // Simpan gambar (jika ada)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                // buat nama unik
+                $filename = time() . '_' . $file->getClientOriginalName();
+
+                // pindahkan file ke folder public/assets/catalog/images
+                $file->move(public_path('assets/catalog/images/'), $filename);
+
+                // simpan nama file ke database (kolom 'gambar')
+                $product->images()->create(['gambar' => $filename]);
+            }
+        }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produk berhasil ditambahkan.');
+    }
+
+    public function editProduct(Product $product)
+    {
+        $kategoriList = Product::select('kategori')->distinct()->pluck('kategori');
+        return view('admin.products.edit', compact('product', 'kategoriList'));
+    }
+
+    public function updateProduct(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'required|string',
+            'stok' => 'required|integer|min:0',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $product->update($validated);
+
+        if ($request->hasFile('images')) {
+            foreach ($product->images as $img) {
+                $filePath = public_path('assets/catalog/images/' . $img->gambar);
+                if (file_exists($filePath)) {
+                    @unlink($filePath);
+                }
+                $img->delete();
+            }
+
+            foreach ($request->file('images') as $img) {
+                $filename = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('assets/catalog/images/'), $filename);
+
+                $product->images()->create(['gambar' => $filename]);
+            }
+        }
+
+
+
+        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui.');
+    }
 }
