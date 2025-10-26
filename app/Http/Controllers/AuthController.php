@@ -9,10 +9,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
     public function showRegister() {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
         return view('auth.register');
     }
 
@@ -45,6 +49,9 @@ class AuthController extends Controller
     }
 
     public function showLogin() {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
         return view('auth.login');
     }
 
@@ -139,5 +146,37 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('status', 'Password berhasil diperbarui. Silakan login kembali.');
     }
+     public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
 
+    /** Handle callback dari Google */
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors(['google' => 'Gagal login menggunakan Google.']);
+        }
+
+        // Cari user berdasarkan email
+        $user = User::where('email', $googleUser->getEmail())->first();
+
+        // Jika belum ada, buat akun baru
+        if (!$user) {
+            $user = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'password' => Hash::make(uniqid()), // password acak
+                'role' => 'customer',
+                'profile_picture' => $googleUser->getAvatar(),
+            ]);
+        }
+
+        // Login user
+        Auth::login($user);
+
+        return redirect()->route('home');
+    }
 }

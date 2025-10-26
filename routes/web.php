@@ -28,6 +28,8 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name(
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 // customer Profile (hanya untuk customer yg login)
 Route::middleware(['auth'])->group(function () {
