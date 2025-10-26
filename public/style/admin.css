@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f2e9;
+    color: #333;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #4E2E0E;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.admin-profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-profile .profile-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #fff;
+    padding: 10px;
+}
+
+.admin-profile h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-menu li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nav-menu a {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Hover dan Active */
+.nav-menu a:hover,
+.nav-menu a.active {
+    background-color: #6B4226;
+    color: #fff;
+    font-weight: 500;
+}
+
+.logout {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 15px;
+}
+
+.logout button {
+    background: none;
+    border: none;
+    color: #ff6666;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+}
+
+.logout button:hover {
+    color: #ff4d4d;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    background-color: #fdfbf7;
+}

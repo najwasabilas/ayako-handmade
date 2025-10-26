@@ -12,6 +12,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\FabricController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('home');
@@ -30,6 +31,13 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+// Admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/export-pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
+});
+
 
 // customer Profile (hanya untuk customer yg login)
 Route::middleware(['auth'])->group(function () {
