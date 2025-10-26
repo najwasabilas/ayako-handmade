@@ -9,10 +9,36 @@
   </div>
 
   <div class="payment-summary">
-    <div class="summary-row"><span>Subtotal Pesanan</span><span>Rp {{ number_format($order->total, 0, ',', '.') }}</span></div>
+    <h3>Rincian Pesanan</h3>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Produk</th>
+          <th>Harga</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($items as $item)
+          <tr>
+            <td>{{ $item['nama'] }}</td>
+            <td>Rp {{ number_format($item['harga'], 0, ',', '.') }}</td>
+            <td>{{ $item['qty'] }}</td>
+            <td>Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
     <hr>
-    <div class="summary-row total"><span>Total Pesanan:</span><span><strong>Rp {{ number_format($order->total, 0, ',', '.') }}</strong></span></div>
+    <div class="summary-row total">
+      <span>Total Pesanan:</span>
+      <span><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></span>
+    </div>
   </div>
+
+
 
   <div class="payment-info">
     <h3>Transfer Pembayaran</h3>
@@ -60,5 +86,28 @@
 .whatsapp-section{margin-top:30px}
 .btn-wa{background:#25D366;color:white;padding:12px 25px;border:none;border-radius:8px;text-decoration:none;font-weight:bold;cursor:pointer}
 .notif.success{background:#d2f8d2;color:#2b7a2b;padding:10px 15px;border-radius:8px;margin-bottom:20px}
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.summary-table th,
+.summary-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.summary-table th {
+  background-color: #f7f3ea;
+  font-weight: bold;
+}
+
+.summary-table tr:last-child td {
+  border-bottom: none;
+}
+
 </style>
 @endsection

@@ -19,11 +19,15 @@ class CheckoutController extends Controller
         if (empty($items)) {
             return redirect()->route('cart.index')->with('error', 'Tidak ada produk yang dipilih untuk checkout.');
         }
+        
+        if (isset($items['product_id'])) {
+            $items = [$items]; // jika single item, ubah ke array of array
+        }
 
         $subtotal = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);
-        $total = $subtotal; // tanpa ongkir
+        $total = $subtotal;
 
-        return view('checkout.index', compact('items', 'subtotal', 'total'));
+        return view('checkout.index', compact('items', 'total'));
     }
 
     /**
@@ -40,6 +44,9 @@ class CheckoutController extends Controller
         $items = session('checkout_items', []);
         if (empty($items)) {
             return redirect()->route('cart.index')->with('error', 'Tidak ada produk yang dipilih untuk checkout.');
+        }
+        if (isset($items['product_id'])) {
+            $items = [$items]; // jika single item, ubah ke array of array
         }
 
         $subtotal = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);
@@ -102,6 +109,17 @@ class CheckoutController extends Controller
     public function payment($id)
     {
         $order = Order::with('items.product')->findOrFail($id);
-        return view('checkout.payment', compact('order'));
+
+        $items = $order->items->map(function ($item) {
+            return [
+                'nama' => $item->product->nama ?? 'Produk tidak ditemukan',
+                'harga' => $item->harga,
+                'qty' => $item->qty,
+                'subtotal' => $item->harga * $item->qty,
+            ];
+        });
+
+    $total = $items->sum('subtotal');
+        return view('checkout.payment', compact('order', 'items', 'total'));
     }
 }

@@ -46,8 +46,6 @@
 
     {{-- Total --}}
     <div class="section total-section">
-      <div class="summary-row"><span>Subtotal Pesanan</span><span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span></div>
-      <hr>
       <div class="summary-row total">
         <span>Total Pesanan:</span><span><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></span>
       </div>
