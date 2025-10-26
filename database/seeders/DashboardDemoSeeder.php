@@ -34,7 +34,7 @@ class DashboardDemoSeeder extends Seeder
             for ($i = 0; $i < $jumlahOrder; $i++) {
                 $order = Order::create([
                     'user_id' => $customer->id,
-                    'status' => collect(['menunggu', 'diproses', 'selesai'])->random(),
+                    'status' => collect(['Dikemas', 'Dikirim', 'Selesai'])->random(),
                     'total' => 0,
                     'alamat' => 'Jl. Contoh No. ' . rand(1, 100) . ', Pekanbaru',
                     'created_at' => Carbon::now()->subMonths(rand(0, 5)),

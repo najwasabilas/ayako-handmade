@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders') ? 'active' : '' }}">
                             <i class="fa-solid fa-cart-shopping"></i> Pesanan
                         </a>
                     </li>

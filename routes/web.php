@@ -36,6 +36,8 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/export-pdf', [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
+    Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::post('/orders/update-status', [AdminController::class, 'updateStatus'])->name('orders.updateStatus');
 });
 
 
@@ -83,7 +85,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/pesanan-saya', [OrderListController::class, 'index'])->name('orders.index');
     Route::get('/pesanan/{id}', [OrderListController::class, 'show'])->name('orders.show');
-    Route::post('/pesanan/{id}/status', [OrderListController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::delete('/pesanan/{id}', [OrderListController::class, 'destroy'])->name('orders.destroy');
 });
 

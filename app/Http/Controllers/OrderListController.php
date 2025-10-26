@@ -29,22 +29,6 @@ class OrderListController extends Controller
     }
 
     /**
-     * Update status pesanan (misalnya dari 'Belum Dibayar' → 'Dikemas')
-     */
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|string',
-        ]);
-
-        $order = Order::where('user_id', Auth::id())->findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
-
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
-    }
-
-    /**
      * Menampilkan detail pesanan (opsional)
      */
     public function show($id)

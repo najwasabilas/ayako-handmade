@@ -77,7 +77,7 @@ class CheckoutController extends Controller
         }
 
         // Buat string alamat gabungan untuk order
-        $alamatGabung = "{$address->nama_penerima} | {$address->telepon} | {$address->alamat_lengkap}";
+        $alamat = $address->alamat_lengkap;
 
         // Hitung total
         $subtotal = collect($items)->sum(fn($i) => $i['harga'] * $i['qty']);
@@ -86,9 +86,9 @@ class CheckoutController extends Controller
         // Buat order baru
         $order = Order::create([
             'user_id' => $user->id,
-            'status' => 'Belum dibayar',
+            'status' => 'Belum Dibayar',
             'total' => $total,
-            'alamat' => $alamatGabung,
+            'alamat' => $alamat,
         ]);
 
         // Simpan item order

@@ -12,7 +12,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 240px;
+    width: 200px;
     background-color: #4E2E0E;
     color: #fff;
     display: flex;
@@ -100,7 +100,7 @@ body {
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 30px 40px;
+    padding: 10px 20px;
     overflow-y: auto;
     background-color: #fdfbf7;
 }

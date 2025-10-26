@@ -61,9 +61,9 @@ class AdminController extends Controller
     }
     public function exportPdf()
     {
-        $orders = Order::with('user')->where('status', 'selesai')->get();
+        $orders = Order::with('user')->get();
 
-        $totalPendapatan = $orders->sum('total');
+        $totalPendapatan = Order::where('status', 'selesai')->sum('total');
         $totalPesanan = $orders->count();
         $produkTerjual = \App\Models\OrderItem::sum('qty');
         $pelangganUnik = \App\Models\User::whereHas('orders')->count();
@@ -77,5 +77,29 @@ class AdminController extends Controller
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download('laporan_penjualan_' . date('Y_m_d') . '.pdf');
+    }
+    public function orders(Request $request)
+    {
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+
+        $orders = Order::with(['user', 'items.product'])
+            ->orderBy($sort, $direction)
+            ->paginate(10);
+
+        return view('admin.orders', compact('orders', 'sort', 'direction'));
+    }
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'status' => 'required|in:Belum Dibayar,Dikemas,Dikirim,Selesai',
+        ]);
+
+        $order = Order::findOrFail($request->order_id);
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
     }
 }

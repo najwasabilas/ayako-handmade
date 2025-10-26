@@ -29,11 +29,11 @@
             @if($address->utama)
               <span class="default-label">Alamat Utama</span>
             @else
-            <form action="{{ route('checkout.deleteAddress', $address->id) }}" method="POST" onsubmit="return confirm('Yakin hapus alamat ini?')">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn-delete">Hapus</button>
-            </form>
+              <button type="button" 
+                      class="btn-delete" 
+                      onclick="deleteAddress({{ $address->id }})">
+                Hapus
+              </button>
             @endif
           </label>
         @endforeach
@@ -93,9 +93,25 @@
       <button type="submit" class="btn-submit">Buat Pesanan</button>
     </div>
   </form>
+
+
+  {{-- Form DELETE terpisah di luar form utama --}}
+  <form id="deleteAddressForm" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+  </form>
+
 </div>
 
 <script>
+function deleteAddress(id) {
+  if (confirm('Yakin hapus alamat ini?')) {
+    const form = document.getElementById('deleteAddressForm');
+    form.action = `/checkout/address/${id}`; // sesuaikan dengan route kamu
+    form.submit();
+  }
+}
+
 document.getElementById('toggleAddAddress').addEventListener('click', function() {
   const form = document.getElementById('addAddressForm');
   form.style.display = form.style.display === 'none' ? 'block' : 'none';
