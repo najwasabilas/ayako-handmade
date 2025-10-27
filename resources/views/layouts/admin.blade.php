@@ -35,7 +35,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ route('admin.fabric.index') }}" class="{{ request()->routeIs('admin.fabric.index') ? 'active' : '' }}">
                             <i class="fa-solid fa-shirt"></i> Fabric
                         </a>
                     </li>

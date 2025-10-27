@@ -43,6 +43,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.store');
     Route::get('/admin/products/{product}/edit', [AdminController::class, 'editProduct'])->name('admin.products.edit');
     Route::put('/admin/products/{product}', [AdminController::class, 'updateProduct'])->name('admin.products.update');
+    Route::get('/admin/fabric', [AdminController::class, 'fabrics'])->name('admin.fabric.index');
+    Route::post('/admin/fabric', [AdminController::class, 'storeFabric'])->name('admin.fabric.store');
+    Route::get('/admin/fabric/{fabric}/edit', [AdminController::class, 'editFabric'])->name('admin.fabric.edit');
+    Route::put('/admin/fabric/{fabric}', [AdminController::class, 'updateFabric'])->name('admin.fabric.update');
+    Route::delete('/admin/fabric/{fabric}', [AdminController::class, 'deleteFabric'])->name('admin.fabric.destroy');
 });
 
 

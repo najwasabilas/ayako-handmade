@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Fabric;
 use Carbon\Carbon;
 use DB;
 use PDF;
@@ -213,4 +214,105 @@ class AdminController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui.');
     }
+    public function fabrics(Request $request)
+    {
+        $search = $request->get('search');
+        $kategori = $request->get('kategori', 'all');
+
+        $query = Fabric::query();
+
+        if ($search) {
+            $query->where('nama', 'like', "%{$search}%");
+        }
+
+        if ($kategori !== 'all') {
+            $query->where('kategori', $kategori);
+        }
+
+        $fabrics = $query->paginate(6);
+        $totalFabric = Fabric::count();
+        $totalKategori = Fabric::distinct('kategori')->count('kategori');
+        $kategoris = Fabric::select('kategori')->distinct()->pluck('kategori');
+
+        return view('admin.fabric', compact('fabrics', 'totalFabric', 'totalKategori', 'kategoris'));
+    }
+
+    public function storeFabric(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+            'kategori_baru' => 'nullable|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Gunakan kategori baru jika diisi
+        if ($request->filled('kategori_baru')) {
+            $validated['kategori'] = $request->kategori_baru;
+        }
+
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/fabric/images/'), $filename);
+            $validated['gambar'] = $filename;
+        }
+
+        Fabric::create([
+            'nama' => $validated['nama'],
+            'kategori' => $validated['kategori'],
+            'gambar' => $validated['gambar'] ?? null,
+        ]);
+
+        return redirect()->route('admin.fabric.index')->with('success', 'Fabric berhasil ditambahkan!');
+    }
+
+
+    public function editFabric(Fabric $fabric)
+    {
+        return response()->json($fabric);
+    }
+
+    public function updateFabric(Request $request, Fabric $fabric)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            // hapus gambar lama
+            $oldPath = public_path('assets/fabric/images/' . $fabric->gambar);
+            if ($fabric->gambar && file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+
+            // simpan baru
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/fabric/images/'), $filename);
+            $validated['gambar'] = $filename;
+        }
+
+        $fabric->update($validated);
+
+        return redirect()->route('admin.fabric.index')->with('success', 'Fabric berhasil diperbarui!');
+    }
+    public function deleteFabric(Fabric $fabric)
+    {
+        // Cek dan hapus file gambar dari folder public/assets/fabric/images/
+        if ($fabric->gambar) {
+            $filePath = public_path('assets/fabric/images/' . $fabric->gambar);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // Hapus data fabric dari database
+        $fabric->delete();
+
+        return redirect()->route('admin.fabric.index')->with('success', 'Fabric berhasil dihapus!');
+    }
+
 }
