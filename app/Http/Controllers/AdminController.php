@@ -85,6 +85,8 @@ class AdminController extends Controller
         $direction = $request->get('direction', 'desc');
 
         $orders = Order::with(['user', 'items.product'])
+            ->select('orders.*')
+            ->leftJoin('users', 'orders.user_id', '=', 'users.id')
             ->orderBy($sort, $direction)
             ->paginate(10);
 
@@ -94,7 +96,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'order_id' => 'required|exists:orders,id',
-            'status' => 'required|in:Belum Dibayar,Dikemas,Dikirim,Selesai',
+            'status' => 'required|in:Belum Dibayar,Dikemas,Dikirim,Selesai,Dibatalkan',
         ]);
 
         $order = Order::findOrFail($request->order_id);

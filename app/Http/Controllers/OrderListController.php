@@ -23,7 +23,7 @@ class OrderListController extends Controller
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->get();
-        $statuses = ['Belum Dibayar', 'Dikemas', 'Dikirim', 'Selesai'];
+        $statuses = ['Belum Dibayar', 'Dikemas', 'Dikirim', 'Selesai', 'Dibatalkan'];
 
         return view('orders.index', compact('orders', 'statuses', 'status'));
     }

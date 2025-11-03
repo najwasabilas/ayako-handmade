@@ -10,14 +10,96 @@
         <table class="orders-table">
             <thead>
                 <tr>
-                    <th>Order ID</th>
-                    <th>Tanggal</th>
-                    <th>Pelanggan</th>
-                    <th>Alamat</th>
-                    <th>Nama Produk</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
-                    <th>Status</th>
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'id',
+                            'direction' => ($sort === 'id' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Order ID
+                            @if ($sort === 'id')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'created_at',
+                            'direction' => ($sort === 'created_at' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Tanggal
+                            @if ($sort === 'created_at')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'users.name',
+                            'direction' => ($sort === 'users.name' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Pelanggan
+                            @if ($sort === 'users.name')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'alamat',
+                            'direction' => ($sort === 'alamat' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Alamat
+                            @if ($sort === 'alamat')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'produk',
+                            'direction' => ($sort === 'produk' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Nama Produk
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'jumlah',
+                            'direction' => ($sort === 'jumlah' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Jumlah
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'total',
+                            'direction' => ($sort === 'total' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Total
+                            @if ($sort === 'total')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
+                    <th>
+                        <a href="{{ route('admin.orders', [
+                            'sort' => 'status',
+                            'direction' => ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'
+                        ]) }}">
+                            Status
+                            @if ($sort === 'status')
+                                <i class="fas fa-sort-{{ $direction === 'asc' ? 'up' : 'down' }}"></i>
+                            @endif
+                        </a>
+                    </th>
+
                     <th></th>
                 </tr>
             </thead>
@@ -36,7 +118,8 @@
                                 {{ $order->status === 'Dikirim' ? 'status-sent' :
                                 ($order->status === 'Dikemas' ? 'status-pending' :
                                 ($order->status === 'Selesai' ? 'status-shipped' :
-                                ($order->status === 'Belum Dibayar' ? 'status-unpaid' : ''))) }}">
+                                ($order->status === 'Belum Dibayar' ? 'status-unpaid' :
+                                ($order->status === 'Dibatalkan' ? 'status-cancelled' : '')))) }}">
                                 {{ $order->status }}
                             </span>
                         </td>
@@ -76,6 +159,7 @@
                 <option value="Dikemas">Dikemas</option>
                 <option value="Dikirim">Dikirim</option>
                 <option value="Selesai">Selesai</option>
+                <option value="Dibatalkan">Dibatalkan</option>
             </select>
 
             <button type="submit" class="save-btn">Simpan</button>
@@ -180,6 +264,11 @@ document.addEventListener('DOMContentLoaded', function() {
 .status-shipped { background-color: #d9fdd3; color: #123711ff; }
 .status-pending { background-color: #ffecc4; color: #a56700; }
 .status-unpaid { background-color: #ffd7d7; color: #a22a2a; }
+.status-cancelled {
+    background-color: #b0b0b0;
+    color: #3a3a3a;
+}
+
 
 /* ======================== EDIT BUTTON ======================== */
 .edit-btn {
@@ -313,5 +402,18 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #d27b26;
     font-weight: 600;
 }
+
+.orders-table th a {
+    color: #3b2e2a;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.orders-table th a:hover {
+    color: #d69d5c;
+}
+
 </style>
 @endsection
