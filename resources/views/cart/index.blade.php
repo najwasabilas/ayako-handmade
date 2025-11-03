@@ -117,6 +117,14 @@ function changeQty(itemId, change) {
   if (qty > max) qty = max;
   input.value = qty;
 
+  // Update total harga per produk secara langsung
+  const row = input.closest('.cart-row');
+  const price = parseInt(row.querySelector('.total').getAttribute('data-price'));
+  const newSubtotal = price * qty;
+  row.querySelector('.total').textContent = "Rp " + newSubtotal.toLocaleString('id-ID');
+
+   updateTotal();
+
   fetch("{{ route('cart.update') }}", {
     method: "POST",
     headers: {
