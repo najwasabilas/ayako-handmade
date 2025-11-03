@@ -110,7 +110,7 @@
                         <td>{{ $order->created_at->format('M d, Y') }}</td>
                         <td><strong>{{ $order->user->name ?? '-' }}</strong></td>
                         <td>{{ $order->alamat }}</td>
-                        <td>{{ optional($order->items->first()->product)->nama ?? '-' }}</td>
+                        <td>{{ $order->items->first()?->product?->nama ?? '-' }}</td>
                         <td>{{ $order->items->sum('qty') }}</td>
                         <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                         <td>
