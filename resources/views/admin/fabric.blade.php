@@ -4,7 +4,7 @@
 <div class="fabric-container">
     <h2>Kelola Fabric</h2>
     <div class="summary-cards">
-        <div class="card"><i class="fas fa-box"></i><p>Total Produk</p><h3>{{ $totalFabric }}</h3></div>
+        <div class="card"><i class="fas fa-box"></i><p>Total Fabric</p><h3>{{ $totalFabric }}</h3></div>
         <div class="card"><i class="fas fa-tags"></i><p>Kategori</p><h3>{{ $totalKategori }}</h3></div>
     </div>
 
@@ -451,7 +451,7 @@ window.onclick = function(event) {
 
 .modal-content input[type="text"],
 .modal-content input[type="file"] {
-    width: 100%;
+    width: 94%;
     padding: 8px 10px;
     border: 1px solid #d4b89a;
     border-radius: 8px;

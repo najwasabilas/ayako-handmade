@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 600;
 }
 
-.status-sent { background-color: #d9fdd3; color: #2a7028; }
+.status-sent { background-color: #d3f2fdff; color: #00276fff; }
 .status-shipped { background-color: #d9fdd3; color: #123711ff; }
 .status-pending { background-color: #ffecc4; color: #a56700; }
 .status-unpaid { background-color: #ffd7d7; color: #a22a2a; }
