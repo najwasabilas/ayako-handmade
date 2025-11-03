@@ -53,6 +53,13 @@
                         <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
                         <td>
                             <a href="{{ route('admin.products.edit', $product) }}" style="text-decoration:none" class="edit-btn"><i class="fas fa-pen"></i></a>
+                            <form action="{{ route('admin.products.destroy', $product) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus product ini?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
                         </td>
                     </tr>
                 @empty
@@ -268,5 +275,18 @@
 
 .pagination li a:hover { background-color: #e8d3b8; }
 .pagination li.active span { background-color: #c9954a; color: white; font-weight: 600; }
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #a22a2a;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-delete:hover {
+    color: #e74c3c;
+}
 </style>
 @endsection

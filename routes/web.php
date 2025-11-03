@@ -48,6 +48,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/fabric/{fabric}/edit', [AdminController::class, 'editFabric'])->name('admin.fabric.edit');
     Route::put('/admin/fabric/{fabric}', [AdminController::class, 'updateFabric'])->name('admin.fabric.update');
     Route::delete('/admin/fabric/{fabric}', [AdminController::class, 'deleteFabric'])->name('admin.fabric.destroy');
+    Route::delete('/admin/products/{product}', [AdminController::class, 'deleteProduct'])->name('admin.products.destroy');
 });
 
 

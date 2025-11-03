@@ -314,5 +314,19 @@ class AdminController extends Controller
 
         return redirect()->route('admin.fabric.index')->with('success', 'Fabric berhasil dihapus!');
     }
+    public function deleteProduct(Product $product)
+    {
+        foreach ($product->images as $image) {
+            $filePath = public_path('assets/catalog/images/' . $image->gambar);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            $image->delete();
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.products.index')->with('success', 'Product berhasil dihapus!');
+    }
 
 }
