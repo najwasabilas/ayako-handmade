@@ -14,8 +14,10 @@ use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\FabricController;
 use App\Http\Controllers\AdminController;
 
+use App\Models\Product;
 Route::get('/', function () {
-    return view('home');
+    $products = Product::latest()->take(6)->get();
+    return view('home', compact('products'));
 })->name('home');
 
 

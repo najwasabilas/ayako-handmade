@@ -20,39 +20,22 @@
 
 
   <!-- 🔹 Katalog Produk -->
-  <section class="highlight-section">
+<section class="highlight-section">
     <h2>KATALOG PRODUK</h2>
+
     <div class="product-grid">
-      <div class="product-card">
-        <img src="{{ asset('assets/tas1.png') }}" alt="Tote Bag Coklat">
-        <h3>Tote Bag Coklat Kombinasi Songket</h3>
-        <p>Rp 350.000</p>
-      </div>
-      <div class="product-card">
-        <img src="{{ asset('assets/tas2.png') }}" alt="Hobo Bag Songket">
-        <h3>Hobo Bag Kombinasi Songket</h3>
-        <p>Rp 300.000</p>
-      </div>
-      <div class="product-card">
-        <img src="{{ asset('assets/tas3.png') }}" alt="Tote Bag Hijau">
-        <h3>Tote Bag Songket</h3>
-        <p>Rp 100.000</p>
-      </div>
-      <div class="product-card">
-        <img src="{{ asset('assets/tas1.png') }}" alt="Tote Bag Coklat">
-        <h3>Tote Bag Coklat Kombinasi Songket</h3>
-        <p>Rp 350.000</p>
-      </div>
-      <div class="product-card">
-        <img src="{{ asset('assets/tas2.png') }}" alt="Hobo Bag Songket">
-        <h3>Hobo Bag Kombinasi Songket</h3>
-        <p>Rp 300.000</p>
-      </div>
-      <div class="product-card">
-        <img src="{{ asset('assets/tas3.png') }}" alt="Tote Bag Hijau">
-        <h3>Tote Bag Songket</h3>
-        <p>Rp 100.000</p>
-      </div>
+        @forelse ($products as $product)
+            <div class="product-card">
+                <a href="{{ route('produk.show', $product->id) }}">
+                    <img src="{{ $product->images->first() ? asset('assets/catalog/images/' . $product->images->first()->gambar) : asset('assets/no-image.png') }}" 
+                        alt="{{ $product->nama }}">
+                </a>
+                <h3>{{ $product->nama }}</h3>
+                <p>Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
+            </div>
+        @empty
+            <p>Tidak ada produk tersedia.</p>
+        @endforelse
     </div>
     <a href="{{ url('/katalog') }}" class="btn-view">Lihat Lebih Banyak</a>
   </section>
@@ -61,9 +44,11 @@
   <section class="middle-banner">
     <div class="overlay"></div>
     <div class="middle-content">
-      <a href="{{ url('/katalog') }}" class="btn-secondary">See More</a>
+        <h2 class="middle-title">KATALOG FABRIC</h2>
+        <a href="{{ url('/fabric') }}" class="btn-secondary">See More</a>
     </div>
-  </section>
+</section>
+
 
   <!-- 🔹 Galeri -->
   <section class="gallery-section">
@@ -78,4 +63,15 @@
     </div>
     <a href="{{ url('/galeri') }}" class="btn-view">Lihat Lebih Banyak</a>
   </section>
+
+  <style>
+    .middle-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+  }
+  </style>
 @endsection
