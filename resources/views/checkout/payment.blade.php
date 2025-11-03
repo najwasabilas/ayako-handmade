@@ -50,23 +50,16 @@
     </div>
   </div>
 
-    @php
-    // Pisahkan alamat yang disimpan menjadi: nama | no_hp | alamat lengkap
-    $alamatParts = explode(' | ', $order->alamat);
-    $nama = $alamatParts[0] ?? '-';
-    $no_hp = $alamatParts[1] ?? '-';
-    $alamatLengkap = $alamatParts[2] ?? '-';
-
-    // Susun pesan WhatsApp otomatis
-    $waMessage = urlencode(
-        "Halo Ayako , saya sudah melakukan pemesanan dengan detail berikut:\n\n" .
-        "Order ID: {$order->id}\n" .
-        "Nama: {$nama}\n" .
-        "No HP: {$no_hp}\n" .
-        "Alamat: {$alamatLengkap}\n\n" .
-        "Mohon konfirmasi ya 🙏"
-    );
-    @endphp
+  @php
+  $waMessage = urlencode(
+      "Halo Ayako, saya sudah melakukan pemesanan dengan detail berikut:\n\n" .
+      "Order ID: {$order->id}\n" .
+      "Nama: {$nama}\n" .
+      "No HP: {$no_hp}\n" .
+      "Alamat: {$alamatLengkap}\n\n" .
+      "Mohon konfirmasi ya 🙏"
+  );
+  @endphp
 
   <div class="whatsapp-section">
     <a href="https://wa.me/6282284471620?text={{ $waMessage }}"

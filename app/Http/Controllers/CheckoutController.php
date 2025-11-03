@@ -135,6 +135,7 @@ class CheckoutController extends Controller
     public function payment($id)
     {
         $order = Order::with('items.product')->findOrFail($id);
+        $user = auth()->user();
 
         $items = $order->items->map(function ($item) {
             return [
@@ -146,6 +147,20 @@ class CheckoutController extends Controller
         });
 
     $total = $items->sum('subtotal');
-        return view('checkout.payment', compact('order', 'items', 'total'));
+    
+    $address = $user->addresses()->where('utama', true)->first();
+
+    $nama = $address->nama_penerima ?? $user->name;
+    $no_hp = $address->no_hp ?? ($user->phone ?? '-');
+    $alamatLengkap = $address->alamat_lengkap ?? ($order->alamat ?? '-');
+
+    return view('checkout.payment', compact(
+        'order',
+        'items',
+        'total',
+        'alamatLengkap',
+        'nama',
+        'no_hp'
+    ));
     }
 }
