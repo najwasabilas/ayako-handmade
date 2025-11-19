@@ -56,7 +56,7 @@
                             <form action="{{ route('admin.products.destroy', $product) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus product ini?')">
+                            <button type="button" class="btn-delete" onclick="openDeleteModal({{ $product->id }})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -74,9 +74,71 @@
             {{ $products->appends(request()->query())->links('vendor.pagination.ayako') }}
         </div>
     </div>
+    <form id="deleteProductForm" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
 </div>
 
+<div id="deleteModal" class="modal">
+    <div class="modal-content" style="max-width: 320px; text-align:center;">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        
+        <h3 style="margin-bottom:10px;">Hapus Produk?</h3>
+        <p style="font-size:14px; color:#6b3e1e; margin-bottom:20px;">
+            Produk yang dihapus tidak dapat dikembalikan.
+        </p>
+
+        <div style="display:flex; justify-content:center; gap:12px;">
+            <button type="button" class="btn-submit" 
+                    onclick="closeDeleteModal()" 
+                    style="background:#c1b09b;">
+                Batal
+            </button>
+
+            <button type="button" class="btn-submit" id="confirmDeleteBtn"
+                    style="background:#c0392b;">
+                Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deleteProductId = null;
+
+    // buka modal
+    function openDeleteModal(id) {
+        deleteProductId = id;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    // tutup modal
+    function closeDeleteModal() {
+        deleteProductId = null;
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // submit penghapusan
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (!deleteProductId) return;
+
+        const form = document.getElementById('deleteProductForm');
+        form.action = `/admin/products/${deleteProductId}`; 
+        form.submit();
+    });
+</script>
+
+
 <style>
+#deleteModal .btn-submit {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
 
 .products-container {
     padding-bottom: 40px;
@@ -288,5 +350,42 @@
 .btn-delete:hover {
     color: #e74c3c;
 }
+/* ================= MODAL DELETE ================= */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal .close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #444;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
 </style>
 @endsection

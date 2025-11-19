@@ -64,7 +64,7 @@
                         <form action="{{ route('admin.fabric.destroy', $fabric) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus fabric ini?')">
+                            <button type="button" class="btn-delete" onclick="openDeleteModal({{ $fabric->id }})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -114,7 +114,36 @@
         </form>
 
     </div>
+    <form id="deleteForm" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
+    
 </div>
+<div id="deleteModal" class="modal">
+    <div class="modal-content" style="max-width: 320px; text-align:center;">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h3 style="margin-bottom:10px;">Hapus Fabric?</h3>
+        <p style="color:#6b3e1e; font-size:14px; margin-bottom:20px;">
+            Apakah kamu yakin ingin menghapus fabric ini?
+        </p>
+
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <button class="btn-submit" 
+                    style="background:#b1a08a;" 
+                    onclick="closeDeleteModal()">
+                Batal
+            </button>
+
+            <button class="btn-submit" 
+                    style="background:#c0392b;" 
+                    id="confirmDeleteBtn">
+                Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 function toggleKategoriBaru(select) {
     const wrapper = document.getElementById('kategoriBaruWrapper');
@@ -204,7 +233,32 @@ window.onclick = function(event) {
 
 </div>
 
+<script>
+    let deleteId = null;
+
+    function openDeleteModal(id) {
+        deleteId = id;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        deleteId = null;
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (!deleteId) return;
+
+        const form = document.getElementById('deleteForm');
+        form.action = `/admin/fabric/${deleteId}`;
+        form.submit();
+    });
+</script>
+
 <style>
+    #deleteModal .btn-submit {
+        min-width: 80px;
+    }
     /* ======================== PAGINATION ======================== */
     .pagination-container {
         display: flex;

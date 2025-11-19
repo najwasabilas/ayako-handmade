@@ -2,6 +2,7 @@
 @section('title', 'Pembayaran')
 
 @section('content')
+<script src="https://sandbox.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
 <div class="payment-container">
   <div class="payment-header">
     <a href="/" class="back-btn">← Kembali</a>
@@ -39,32 +40,16 @@
   </div>
 
 
-
-  <div class="payment-info">
-    <h3>Transfer Pembayaran</h3>
-    <p>Silakan transfer ke rekening berikut:</p>
-    <div class="rekening">
-      <strong>Bank BCA</strong><br>
-      <span>No. Rekening: 1234567890</span><br>
-      <span>Atas Nama: Ayako Store</span>
-    </div>
-  </div>
-
-  @php
-  $waMessage = urlencode(
-      "Halo Ayako, saya sudah melakukan pemesanan dengan detail berikut:\n\n" .
-      "Order ID: {$order->id}\n" .
-      "Nama: {$nama}\n" .
-      "No HP: {$no_hp}\n" .
-      "Alamat: {$alamatLengkap}\n\n" .
-      "Mohon konfirmasi ya 🙏"
-  );
-  @endphp
-
   <div class="whatsapp-section">
-    <a href="https://wa.me/6282284471620?text={{ $waMessage }}"
-       target="_blank" class="btn-wa">Hubungi via WhatsApp</a>
+    @if ($order->payment_status == 'pending')
+      <button onclick="loadJokulCheckout('{{ $order->payment_url }}')" 
+              class="btn-wa"
+              style="margin-top:20px;">
+          Bayar Sekarang
+      </button>
+    @endif
   </div>
+
 </div>
 
 <style>
@@ -77,7 +62,7 @@
 .payment-info{margin-top:30px;text-align:center}
 .rekening{background:#fffaf3;padding:15px;border-radius:10px;display:inline-block;margin-top:10px}
 .whatsapp-section{margin-top:30px}
-.btn-wa{background:#25D366;color:white;padding:12px 25px;border:none;border-radius:8px;text-decoration:none;font-weight:bold;cursor:pointer}
+.btn-wa{background:#a5642e;color:white;padding:12px 25px;border:none;border-radius:8px;text-decoration:none;font-weight:bold;cursor:pointer}
 .notif.success{background:#d2f8d2;color:#2b7a2b;padding:10px 15px;border-radius:8px;margin-bottom:20px}
 .summary-table {
   width: 100%;

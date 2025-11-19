@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Fabric;
+use App\Models\ProductImage;
 use Carbon\Carbon;
 use DB;
 use PDF;
@@ -190,32 +191,44 @@ class AdminController extends Controller
             'harga' => 'required|numeric',
             'deskripsi' => 'required|string',
             'stok' => 'required|integer|min:0',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // Update data product
         $product->update($validated);
 
-        if ($request->hasFile('images')) {
-            foreach ($product->images as $img) {
-                $filePath = public_path('assets/catalog/images/' . $img->gambar);
-                if (file_exists($filePath)) {
-                    @unlink($filePath);
+        // --- HAPUS GAMBAR TERTENTU ---
+        if ($request->delete_images) {
+            foreach ($request->delete_images as $id) {
+                if ($id) {
+                    $img = $product->images()->find($id);
+                    if ($img) {
+                        $path = public_path('assets/catalog/images/' . $img->gambar);
+                        if (file_exists($path)) {
+                            unlink($path);
+                        }
+                        $img->delete();
+                    }
                 }
-                $img->delete();
-            }
-
-            foreach ($request->file('images') as $img) {
-                $filename = time() . '_' . $img->getClientOriginalName();
-                $img->move(public_path('assets/catalog/images/'), $filename);
-
-                $product->images()->create(['gambar' => $filename]);
             }
         }
 
+        // --- TAMBAH GAMBAR BARU ---
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $img) {
+                $filename = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('assets/catalog/images'), $filename);
 
+                $product->images()->create([
+                    'gambar' => $filename
+                ]);
+            }
+        }
 
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui.');
+        return redirect()->route('admin.products.index')
+                        ->with('success', 'Produk berhasil diperbarui.');
     }
+
     public function fabrics(Request $request)
     {
         $search = $request->get('search');
@@ -329,6 +342,25 @@ class AdminController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product berhasil dihapus!');
+    }
+    public function deleteImage($id)
+    {
+        $image = ProductImage::find($id);
+
+        if (!$image) {
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+
+        // delete file
+        $path = public_path('assets/catalog/images/' . $image->gambar);
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        // delete database row
+        $image->delete();
+
+        return response()->json(['success' => true]);
     }
 
 }

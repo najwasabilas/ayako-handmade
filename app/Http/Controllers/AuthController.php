@@ -25,28 +25,28 @@ class AuthController extends Controller
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
-        ], [
-            'name.required' => 'Nama tidak boleh kosong.',
-            'name.max' => 'Nama maksimal 100 karakter.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 6 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
+
+        $otp = rand(100000, 999999);
 
         $user = User::create([
             'name' => $request->name,
-            'email'=> $request->email,
-            'password'=> Hash::make($request->password),
-            'role'=>'customer'
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'customer',
+            'verification_code' => $otp,
+            'verification_expires_at' => now()->addMinutes(5),
+            'is_verified' => false,
         ]);
 
-        Auth::login($user);
+        // KIRIM EMAIL OTP
+        \Mail::raw("Kode verifikasi Anda adalah: $otp", function ($msg) use ($user) {
+            $msg->to($user->email)->subject('Kode Verifikasi Akun Ayako');
+        });
 
-        return redirect()->route('home');
+        return view('auth.verify-otp', ['email' => $user->email]);
     }
+
 
     public function showLogin() {
         if (Auth::check()) {
@@ -187,4 +187,61 @@ class AuthController extends Controller
 
         return redirect()->route('home');
     }
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $code = $request->digit1 . $request->digit2 . $request->digit3 .
+                $request->digit4 . $request->digit5 . $request->digit6;
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Akun tidak ditemukan.']);
+        }
+
+        if ($user->verification_code !== $code) {
+            return back()->withErrors(['otp' => 'Kode salah.']);
+        }
+
+        if (now()->greaterThan($user->verification_expires_at)) {
+            return back()->withErrors(['otp' => 'Kode sudah kadaluarsa.']);
+        }
+
+        $user->update([
+            'is_verified' => true,
+            'verification_code' => null,
+        ]);
+
+        Auth::login($user);
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        return redirect()->route('email.verified.success');
+    }
+    public function resendOtp($email)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+        }
+
+        $newOtp = rand(100000, 999999);
+
+        $user->update([
+            'verification_code' => $newOtp,
+            'verification_expires_at' => now()->addMinutes(5),
+        ]);
+
+        \Mail::raw("Kode verifikasi baru Anda adalah: $newOtp", function ($msg) use ($user) {
+            $msg->to($user->email)->subject('Kode OTP Baru Ayako');
+        });
+
+        return back()->with('status', 'Kode baru telah dikirim.');
+    }
+
 }

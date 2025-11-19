@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\FabricController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DokuPaymentController;
 
 use App\Models\Product;
 Route::get('/', function () {
@@ -33,6 +34,12 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify.otp');
+Route::get('/resend-otp/{email}', [AuthController::class, 'resendOtp'])->name('resend.otp');
+Route::get('/email-verified-success', function () {
+    return view('auth.email-verified-success');
+})->name('email.verified.success');
+
 
 // Admin
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -51,6 +58,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/fabric/{fabric}', [AdminController::class, 'updateFabric'])->name('admin.fabric.update');
     Route::delete('/admin/fabric/{fabric}', [AdminController::class, 'deleteFabric'])->name('admin.fabric.destroy');
     Route::delete('/admin/products/{product}', [AdminController::class, 'deleteProduct'])->name('admin.products.destroy');
+    Route::delete('/admin/products/delete-image/{id}', [AdminController::class, 'deleteImage'])
+    ->name('admin.products.delete-image');
 });
 
 
@@ -71,12 +80,19 @@ Route::get('/galeri', [GalleryController::class, 'index'])->name('gallery');
 // Catalog and Product
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/produk/{id}', [ProductController::class, 'show'])->name('produk.show');
+Route::get('/katalog/load-more', [CatalogController::class, 'loadMore']);
 
 // Checkout and Cart
 Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', [OrderController::class, 'addToCart'])->name('cart.add');
     Route::get('/checkout-now', [OrderController::class, 'checkoutNow'])->name('checkout.now');
     Route::get('/checkout', [OrderController::class, 'showCheckoutPage'])->name('checkout.page');
+    // BUAT PEMBAYARAN
+    Route::get('/payment/doku/{orderId}', [DokuPaymentController::class, 'create'])
+        ->name('doku.create');
+    // CALLBACK (POST dari DOKU)
+    Route::post('/payment/doku/callback', [DokuPaymentController::class, 'callback'])->name('doku.callback');
+    Route::get('/payment/doku/finish', [DokuPaymentController::class, 'afterPayment'])->name('doku.finish');
 });
 
 // CartController

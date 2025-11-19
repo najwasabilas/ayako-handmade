@@ -25,11 +25,22 @@
                     <label>Foto Produk*</label>
                     <input type="file" name="images[]" id="images" multiple accept="image/*">
                     <p class="hint">Maks. 5 gambar</p>
-                    <div id="preview" class="flex gap-3 mt-3 flex-wrap">
+                    <div id="preview-existing" class="flex gap-3 mt-3 flex-wrap">
                         @foreach($product->images as $img)
-                            <img src="{{ asset('assets/catalog/images/' . ($product->images->first()->gambar ?? 'no-image.jpg')) }}" class="w-24 h-24 object-cover rounded-lg border">
+                            <div class="img-wrapper">
+                                <img src="{{ asset('assets/catalog/images/' . $img->gambar) }}" class="preview-img">
+
+                                <button type="button" class="delete-image-btn"
+                                    onclick="openDeleteImageModal({{ $img->id }}, this)">
+                                    &times;
+                                </button>
+                            </div>
                         @endforeach
                     </div>
+
+                    <div id="preview-new" class="flex gap-3 mt-3 flex-wrap"></div>
+
+
                 </div>
 
                 <div class="form-group">
@@ -71,8 +82,31 @@
             <button type="submit" class="btn-save">Simpan</button>
         </div>
     </form>
+ <!-- MODAL HAPUS GAMBAR -->
+<div id="deleteImageModal" class="modal">
+    <div class="modal-box">
+        <h3 class="modal-title">Hapus Gambar?</h3>
+
+        <p class="modal-message">
+            Gambar yang dihapus tidak dapat dipulihkan.
+        </p>
+
+        <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeDeleteImageModal()">Batal</button>
+            <button class="modal-btn delete" id="confirmDeleteImageBtn">Hapus</button>
+        </div>
+    </div>
 </div>
 
+<!-- MODAL ALERT -->
+<div id="alertModal" class="modal">
+    <div class="modal-box">
+        <h3 class="modal-title">Peringatan</h3>
+        <p class="modal-message" id="alertMessage"></p>
+
+        <button class="modal-btn" onclick="closeAlertModal()">OK</button>
+    </div>
+</div>
 <style>
 body {
     background-color: #f9f4ec;
@@ -197,24 +231,146 @@ body {
     transform: scale(1.05);
 }
 
+.img-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #d3bfa8;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+}
+/* ==== UNIVERSAL MODAL ==== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    width: 320px;
+    background: #fff;
+    padding: 22px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #5a4028;
+}
+
+.modal-message {
+    font-size: 14px;
+    color: #6d5440;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Buttons */
+.modal-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+}
+
+.modal-btn.cancel {
+    background: #d4c6b6;
+    color: #4a3c2f;
+}
+
+.modal-btn.delete {
+    background: #c0392b;
+    color: white;
+}
+
+.modal-btn:hover {
+    opacity: .85;
+}
+
 </style>
 
 <script>
-document.getElementById('images').addEventListener('change', function(e) {
-    const preview = document.getElementById('preview');
-    preview.innerHTML = '';
-    const files = Array.from(e.target.files).slice(0, 5);
-    files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = ev => {
-            const img = document.createElement('img');
-            img.src = ev.target.result;
-            img.classList.add('w-24', 'h-24', 'object-cover', 'rounded-lg', 'border');
-            preview.appendChild(img);
-        };
-        reader.readAsDataURL(file);
+    let jumlahGambarLama = {{ isset($product) ? $product->images->count() : 0 }};
+</script>
+
+<script>
+    function openAlertModal(message) {
+        document.getElementById("alertMessage").innerText = message;
+        document.getElementById("alertModal").style.display = "flex";
+    }
+
+    function closeAlertModal() {
+        document.getElementById("alertModal").style.display = "none";
+    }
+    document.getElementById('images').addEventListener('change', function(e) {
+
+        const previewNew = document.getElementById('preview-new');
+        previewNew.innerHTML = '';
+
+        let files = Array.from(e.target.files);
+
+        const total = jumlahGambarLama + files.length;
+
+        if (total > 5) {
+            openAlertModal(`Maksimal 5 gambar! Saat ini sudah ada ${jumlahGambarLama} gambar lama.`);
+            e.target.value = "";
+            return;
+        }
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = document.createElement('img');
+                img.src = ev.target.result;
+                img.classList.add('preview-img');
+                previewNew.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
     });
-});
+
 
 function toggleCustomCategory(select) {
     const input = document.getElementById('kategori-baru');
@@ -230,5 +386,46 @@ function toggleCustomCategory(select) {
         input.removeAttribute('name');
     }
 }
+</script>
+<script>
+let imageToDelete = null;
+let buttonRef = null;
+
+function openDeleteImageModal(id, btn) {
+    imageToDelete = id;
+    buttonRef = btn;
+    document.getElementById('deleteImageModal').style.display = 'flex';
+}
+
+function closeDeleteImageModal() {
+    document.getElementById('deleteImageModal').style.display = 'none';
+    imageToDelete = null;
+    buttonRef = null;
+}
+
+document.getElementById('confirmDeleteImageBtn').addEventListener('click', function () {
+
+    fetch(`/admin/products/delete-image/${imageToDelete}`, {
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            if (buttonRef && buttonRef.closest(".img-wrapper")) {
+                buttonRef.closest(".img-wrapper").remove();
+            }
+
+            if (typeof jumlahGambarLama !== "undefined") {
+                jumlahGambarLama--;
+            }
+            location.reload();
+        }
+    });
+
+    closeDeleteImageModal();
+});
 </script>
 @endsection

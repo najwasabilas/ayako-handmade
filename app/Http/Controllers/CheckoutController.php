@@ -125,7 +125,7 @@ class CheckoutController extends Controller
 
         session()->forget('checkout_items');
 
-        return redirect()->route('checkout.payment', $order->id)->with('success', 'Pesanan berhasil dibuat!');
+        return redirect()->route('doku.create', $order->id);
     }
 
 

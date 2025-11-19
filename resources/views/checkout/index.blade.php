@@ -101,23 +101,43 @@
     @method('DELETE')
   </form>
 
+  <!-- Modal Hapus Alamat -->
+  <div id="deleteModal" class="delete-modal">
+    <div class="delete-modal-content">
+      <h4>Hapus Alamat?</h4>
+      <p>Alamat ini akan dihapus secara permanen.</p>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeDeleteModal()">Batal</button>
+        <button class="btn-confirm" id="confirmDeleteBtn">Hapus</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
+let deleteId = null;
+
 function deleteAddress(id) {
-  if (confirm('Yakin hapus alamat ini?')) {
-    const form = document.getElementById('deleteAddressForm');
-    form.action = `/checkout/address/${id}`; // sesuaikan dengan route kamu
-    form.submit();
-  }
+  deleteId = id;
+  document.getElementById('deleteModal').style.display = 'flex';
 }
 
-document.getElementById('toggleAddAddress').addEventListener('click', function() {
-  const form = document.getElementById('addAddressForm');
-  form.style.display = form.style.display === 'none' ? 'block' : 'none';
-  this.textContent = form.style.display === 'none' ? '+ Tambah Alamat Baru' : '− Tutup Form Alamat';
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+  deleteId = null;
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+  if (deleteId) {
+    const form = document.getElementById('deleteAddressForm');
+    form.action = `/checkout/delete-address/${deleteId}`;
+    form.submit();
+  }
 });
 </script>
+
 
 <style>
 .checkout-container{padding:20px;background:#f7f3ea;min-height:85vh}
@@ -260,5 +280,76 @@ document.getElementById('toggleAddAddress').addEventListener('click', function()
   font-weight: bold;
   font-size: 10px;
 }
+/* ======================= */
+/*      MODAL HAPUS        */
+/* ======================= */
+.delete-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.delete-modal-content {
+  background: #fffaf3;
+  padding: 25px;
+  border-radius: 12px;
+  width: 85%;
+  max-width: 380px;
+  text-align: center;
+  border: 1px solid #e5cdaa;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.delete-modal-content h4 {
+  margin-bottom: 10px;
+  color: #5a3b17;
+  font-weight: 700;
+}
+
+.delete-modal-content p {
+  color: #6e573d;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 10px;
+  background: #ccc;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-confirm {
+  flex: 1;
+  padding: 10px;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
 </style>
 @endsection
