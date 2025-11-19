@@ -136,6 +136,12 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', function (
     form.submit();
   }
 });
+document.getElementById('toggleAddAddress').addEventListener('click', function() {
+  const form = document.getElementById('addAddressForm');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  this.textContent = form.style.display === 'none' ? '+ Tambah Alamat Baru' : '− Tutup Form Alamat';
+
+});
 </script>
 
 
