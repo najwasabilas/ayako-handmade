@@ -45,6 +45,9 @@ class DokuService
             ],
             "payment" => [
                 "payment_due_date" => 60 // 60 minutes
+            ],
+            "customer" => [
+                    "callback_url" => config('app.url') . "/payment/doku/callback"
             ]
         ];
 
