@@ -25,4 +25,26 @@ class CatalogController extends Controller
 
         return view('katalog', compact('products', 'categories'));
     }
+    
+    public function loadMore(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->filled('kategori') && $request->kategori !== '' && $request->kategori !== 'all') {
+            $query->where('kategori', $request->kategori);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('nama', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->with('images')->skip($request->skip)->take(12)->get();
+
+        return response()->json([
+            'products' => $products,
+            'next_skip' => $request->skip + 12,
+        ]);
+    }
+
+
 }

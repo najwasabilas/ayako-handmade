@@ -1080,6 +1080,7 @@ body.profile-page {
   padding: 16px;
   animation: fadeIn 0.8s ease;
   width:100%;
+  height: 100%;
 }
 
 .product-link {

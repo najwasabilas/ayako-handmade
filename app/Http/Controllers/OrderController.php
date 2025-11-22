@@ -82,26 +82,16 @@ class OrderController extends Controller
 
         // Simpan data sementara ke session agar bisa dibaca di halaman checkout
         session([
-            'checkout_item' => [
+            'checkout_items' => [
                 'product_id' => $product->id,
                 'nama' => $product->nama,
                 'harga' => $product->harga,
                 'qty' => $request->qty,
                 'total' => $product->harga * $request->qty,
+                'image' => $product->images->first()->gambar ?? 'no-image.jpg',  
             ]
         ]);
 
         return redirect()->route('checkout.page');
-    }
-
-    public function showCheckoutPage()
-    {
-        $item = session('checkout_item');
-
-        if (!$item) {
-            return redirect()->route('katalog')->with('error', 'Tidak ada produk untuk checkout.');
-        }
-
-        return view('checkout', compact('item'));
     }
 }

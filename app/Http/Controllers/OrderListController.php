@@ -23,25 +23,9 @@ class OrderListController extends Controller
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->get();
-        $statuses = ['Belum Dibayar', 'Dikemas', 'Dikirim', 'Selesai'];
+        $statuses = ['Belum Dibayar', 'Dikemas', 'Dikirim', 'Selesai', 'Dibatalkan'];
 
         return view('orders.index', compact('orders', 'statuses', 'status'));
-    }
-
-    /**
-     * Update status pesanan (misalnya dari 'Belum Dibayar' → 'Dikemas')
-     */
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|string',
-        ]);
-
-        $order = Order::where('user_id', Auth::id())->findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
-
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
     }
 
     /**
