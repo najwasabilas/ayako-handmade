@@ -39,7 +39,7 @@ class DokuPaymentController extends Controller
 
         $headers = getallheaders();
         $secretKey = env('DOKU_SECRET_KEY');
-        $notificationPath = "/payment/doku/callback";
+        $notificationPath = "/payment/callback";
 
         // Raw body dari DOKU
         $body = file_get_contents("php://input");
