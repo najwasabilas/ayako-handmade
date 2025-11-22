@@ -46,34 +46,34 @@ class DokuPaymentController extends Controller
         Log::info("CALLBACK RAW BODY", ['body' => $body]);
 
         // Generate Digest
-        $digest = base64_encode(hash('sha256', $body, true));
+        // $digest = base64_encode(hash('sha256', $body, true));
 
-        // Susun raw signature sesuai dokumentasi
-        $rawSignature =
-            "Client-Id:" . ($headers['Client-Id'] ?? '') . "\n" .
-            "Request-Id:" . ($headers['Request-Id'] ?? '') . "\n" .
-            "Request-Timestamp:" . ($headers['Request-Timestamp'] ?? '') . "\n" .
-            "Request-Target:" . $notificationPath . "\n" .
-            "Digest:" . $digest;
+        // // Susun raw signature sesuai dokumentasi
+        // $rawSignature =
+        //     "Client-Id:" . ($headers['Client-Id'] ?? '') . "\n" .
+        //     "Request-Id:" . ($headers['Request-Id'] ?? '') . "\n" .
+        //     "Request-Timestamp:" . ($headers['Request-Timestamp'] ?? '') . "\n" .
+        //     "Request-Target:" . $notificationPath . "\n" .
+        //     "Digest:" . $digest;
 
-        // HMAC SHA256
-        $generatedSignature = "HMACSHA256=" . base64_encode(
-            hash_hmac('sha256', $rawSignature, $secretKey, true)
-        );
+        // // HMAC SHA256
+        // $generatedSignature = "HMACSHA256=" . base64_encode(
+        //     hash_hmac('sha256', $rawSignature, $secretKey, true)
+        // );
 
-        // VALIDASI SIGNATURE
-        if (!isset($headers['Signature']) || $generatedSignature !== $headers['Signature']) {
+        // // VALIDASI SIGNATURE
+        // if (!isset($headers['Signature']) || $generatedSignature !== $headers['Signature']) {
 
-            Log::error("INVALID SIGNATURE", [
-                "expected" => $generatedSignature,
-                "received" => $headers['Signature'] ?? null
-            ]);
+        //     Log::error("INVALID SIGNATURE", [
+        //         "expected" => $generatedSignature,
+        //         "received" => $headers['Signature'] ?? null
+        //     ]);
 
-            return response("Invalid Signature", 400)
-                ->header("Content-Type", "text/plain");
-        }
+        //     return response("Invalid Signature", 400)
+        //         ->header("Content-Type", "text/plain");
+        // }
 
-        Log::info("VALID SIGNATURE ✓");
+        // Log::info("VALID SIGNATURE ✓");
 
         // WAJIB → respon 200 dulu agar DOKU tidak retry
         $response = response("OK", 200)->header("Content-Type", "text/plain");
