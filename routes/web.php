@@ -84,8 +84,8 @@ Route::get('/katalog/load-more', [CatalogController::class, 'loadMore']);
 
 
 // CALLBACK (POST dari DOKU)
-Route::post('/payment/doku/callback', [DokuPaymentController::class, 'callback'])->name('doku.callback');
-Route::get('/payment/doku/finish', [DokuPaymentController::class, 'afterPayment'])->name('doku.finish');
+Route::post('/payment/callback', [DokuPaymentController::class, 'callback'])->name('doku.callback');
+Route::get('/payment/finish', [DokuPaymentController::class, 'afterPayment'])->name('doku.finish');
 
 // Checkout and Cart
 Route::middleware(['auth'])->group(function () {
