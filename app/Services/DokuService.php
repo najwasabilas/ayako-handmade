@@ -41,13 +41,13 @@ class DokuService
             "order" => [
                 "amount"   => (int) $order->total,
                 "invoice_number" => $order->invoice_number,
-                "currency" => "IDR"
+                "currency" => "IDR",
+                "callback_url" => "https://ayako.store/pesanan-saya",
+                "callback_url_cancel" => "https://ayako.store/pesanan-saya",
+                "callback_url_result" => "https://ayako.store/pesanan-saya",
             ],
             "payment" => [
                 "payment_due_date" => 60 // 60 minutes
-            ],
-            "customer" => [
-                    "callback_url" => config('app.url') . "/payment/doku/callback"
             ]
         ];
 
