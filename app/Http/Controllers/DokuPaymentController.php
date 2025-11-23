@@ -36,11 +36,17 @@ class DokuPaymentController extends Controller
     // CALLBACK dari DOKU
     public function callback(Request $request)
     {
-        return response('OK', 200)->header('Content-Type', 'text/plain');
         $headers = $request->headers->all();
 
         $body = $request->getContent();
 
+        $response = response("OK", 200)->header("Content-Type", "text/plain");
+        $response->send();
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        
         $data = json_decode($body, true);
 
         Log::info("DOKU callback body", $data ?? []);
@@ -75,7 +81,6 @@ class DokuPaymentController extends Controller
         }
 
         $order->save();
-        return response('OK', 200)->header('Content-Type', 'text/plain');
     }
     public function afterPayment(Request $request)
     {
