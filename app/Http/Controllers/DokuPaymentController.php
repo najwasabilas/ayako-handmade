@@ -35,47 +35,10 @@ class DokuPaymentController extends Controller
     // CALLBACK dari DOKU
     public function callback(Request $request)
     {
-        Log::info("=== DOKU CALLBACK RECEIVED ===");
+        $headers = $request->headers->all();
 
-        $headers = getallheaders();
-        $secretKey = env('DOKU_SECRET_KEY');
-        $notificationPath = "/payment/callback";
+        $body = $request->getContent();
 
-        // Raw body dari DOKU
-        $body = file_get_contents("php://input");
-        Log::info("CALLBACK RAW BODY", ['body' => $body]);
-
-        // Generate Digest
-        // $digest = base64_encode(hash('sha256', $body, true));
-
-        // // Susun raw signature sesuai dokumentasi
-        // $rawSignature =
-        //     "Client-Id:" . ($headers['Client-Id'] ?? '') . "\n" .
-        //     "Request-Id:" . ($headers['Request-Id'] ?? '') . "\n" .
-        //     "Request-Timestamp:" . ($headers['Request-Timestamp'] ?? '') . "\n" .
-        //     "Request-Target:" . $notificationPath . "\n" .
-        //     "Digest:" . $digest;
-
-        // // HMAC SHA256
-        // $generatedSignature = "HMACSHA256=" . base64_encode(
-        //     hash_hmac('sha256', $rawSignature, $secretKey, true)
-        // );
-
-        // // VALIDASI SIGNATURE
-        // if (!isset($headers['Signature']) || $generatedSignature !== $headers['Signature']) {
-
-        //     Log::error("INVALID SIGNATURE", [
-        //         "expected" => $generatedSignature,
-        //         "received" => $headers['Signature'] ?? null
-        //     ]);
-
-        //     return response("Invalid Signature", 400)
-        //         ->header("Content-Type", "text/plain");
-        // }
-
-        // Log::info("VALID SIGNATURE ✓");
-
-        // WAJIB → respon 200 dulu agar DOKU tidak retry
         $response = response("OK", 200)->header("Content-Type", "text/plain");
         $response->send();
 
@@ -83,49 +46,40 @@ class DokuPaymentController extends Controller
             fastcgi_finish_request();
         }
 
-
-        // -------- PROSES NOTIFICATION ----------
         $data = json_decode($body, true);
+
+        Log::info("DOKU callback body", $data ?? []);
+        Log::info("DOKU callback headers", $headers);
 
         $invoice = $data['order']['invoice_number'] ?? null;
         $status  = $data['transaction']['status'] ?? null;
 
         if (!$invoice) {
-            Log::error("Invoice not found in callback.");
+            Log::error("Invoice missing in callback");
             return;
         }
 
         $order = Order::where('invoice_number', $invoice)->first();
-
         if (!$order) {
-            Log::error("Order not found: " . $invoice);
+            Log::error("Order not found: $invoice");
             return;
         }
 
-        // Idempotent → jangan proses ulang
         if ($order->payment_status === "PAID") {
-            Log::info("Order already processed → ignore duplicate event", ['order_id' => $order->id]);
+            Log::info("Payment already processed → ignore duplicate");
             return;
         }
-
         if ($status === "SUCCESS") {
             $order->payment_status = "PAID";
             $order->status = "Dikemas";
-        }
-        elseif ($status === "FAILED") {
-            Log::info("FAILED ignored (Checkout Spec)");
+        } elseif ($status === "FAILED") {
+            Log::info("FAILED ignored");
             return;
-        }
-        else {
+        } else {
             $order->payment_status = "PENDING";
         }
 
         $order->save();
-
-        Log::info("ORDER UPDATED SUCCESSFULLY", [
-            "order_id" => $order->id,
-            "new_status" => $order->payment_status
-        ]);
     }
     public function afterPayment(Request $request)
     {
