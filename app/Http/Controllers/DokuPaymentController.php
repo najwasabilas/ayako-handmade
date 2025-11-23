@@ -78,11 +78,10 @@ class DokuPaymentController extends Controller
             return;
         } else {
             $order->payment_status = "PENDING";
-            return redirect()->route('orders.index')->with('success', 'Pembayaran Ditunggu!');
         }
 
         $order->save();
-        return redirect()->route('orders.index')->with('success', 'Pembayaran Berhasil!');
+        return response('OK', 200)->header('Content-Type', 'text/plain');
     }
     public function afterPayment(Request $request)
     {
