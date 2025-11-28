@@ -26,7 +26,7 @@
     </div>
 
     <div class="card">
-        <h3>Pelanggan Unik</h3>
+        <h3>Repeat Order</h3>
         <p class="value">{{ $pelangganUnik }}</p>
     </div>
 </div>

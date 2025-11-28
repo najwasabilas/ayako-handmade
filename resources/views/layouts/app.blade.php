@@ -124,7 +124,7 @@
         <p>0811-7680-059</p>
 
         <h4>Email</h4>
-        <p>contohayako@gmail.com</p>
+        <p>ayako.umkm@gmail.com</p>
       </div>
 
       <div class="footer-column footer-links">
